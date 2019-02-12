@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 
-namespace SFA.DAS.Forecasting.Infrastructure.Tests.Configuration
+namespace SFA.DAS.Forecasting.Infrastructure.UnitTests.Configuration
 {
     public class WhenParsingConfigurationFromStorage
     {

@@ -17,8 +17,6 @@ namespace SFA.DAS.Forecasting.Domain.Entities
         public decimal TransferOutCostOfTraining { get; set; }
         public decimal TransferInCompletionPayments { get; set; }
         public decimal TransferOutCompletionPayments { get; set; }
-        public decimal CommittedTransferCost { get; set; }
-        public decimal CommittedTransferCompletionCost { get; set; }
         public decimal ExpiredFunds { get; set; }
         public decimal FutureFunds { get; set; } 
         public decimal CoInvestmentEmployer { get; set; } 
