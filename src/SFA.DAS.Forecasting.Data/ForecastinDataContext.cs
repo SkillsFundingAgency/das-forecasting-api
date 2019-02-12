@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Forecasting.Domain.Entities;
+using SFA.DAS.Forecasting.Data.Configuration;
+
 
 namespace SFA.DAS.Forecasting.Data
 {
@@ -13,7 +14,7 @@ namespace SFA.DAS.Forecasting.Data
 
     public partial class ForecastingDataContext : DbContext, IForecastingDataContext
     {
-        public DbSet<AccountProjection> AccountProjections { get; set; }
+        public DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
         public ForecastingDataContext()
         {
         }
@@ -28,6 +29,13 @@ namespace SFA.DAS.Forecasting.Data
         public override int SaveChanges()
         {
             return base.SaveChanges();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AccountProjection());
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
