@@ -5,7 +5,7 @@ namespace SFA.DAS.Forecasting.Domain.Entities
     public class AccountProjection
     {
         public long Id { get; set; } 
-        public long EmployerAccountId { get; set; } 
+        public long AccountId { get; set; } 
         public DateTime ProjectionCreationDate { get; set; } 
         public short ProjectionGenerationType { get; set; } 
         public short Month { get; set; } 

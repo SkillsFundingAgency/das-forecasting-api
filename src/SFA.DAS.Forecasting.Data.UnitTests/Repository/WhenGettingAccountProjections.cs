@@ -22,17 +22,17 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.Repository
             {
                 new AccountProjection
                 {
-                    EmployerAccountId = 1,
+                    AccountId = 1,
                     FutureFunds = 100
                 },
                 new AccountProjection
                 {
-                    EmployerAccountId = 1,
+                    AccountId = 1,
                     FutureFunds = 100
                 },
                 new AccountProjection
                 {
-                    EmployerAccountId = 2,
+                    AccountId = 2,
                     FutureFunds = 200
                 }
             };

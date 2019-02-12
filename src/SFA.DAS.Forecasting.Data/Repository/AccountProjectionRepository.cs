@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Data.Repository
         {
             var projections = await _forecastingDataContext
                                     .AccountProjections
-                                    .Where(c => c.EmployerAccountId.Equals(accountId))
+                                    .Where(c => c.AccountId.Equals(accountId))
                                     .ToListAsync();
 
             return projections;
