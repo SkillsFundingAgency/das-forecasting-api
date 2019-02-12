@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Infrastructure\SFA.DAS.Forecasting.Infrastructure.csproj" />
   </ItemGroup>
 

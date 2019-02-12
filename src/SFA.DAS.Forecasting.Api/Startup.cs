@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 
@@ -39,11 +41,14 @@ namespace SFA.DAS.Forecasting.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.Configure<ForecastingConfiguration>(Configuration.GetSection("Forecasting"));
+            services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
             var serviceProvider = services.BuildServiceProvider();
             var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>();
+            var forecastingConfiguration = serviceProvider.GetService<IOptions<ForecastingConfiguration>>();
 
             if (!Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -82,6 +87,9 @@ namespace SFA.DAS.Forecasting.Api
 
 
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddDbContext<ForecastingDataContext>(options => options.UseSqlServer(forecastingConfiguration.Value.ConnectionString));
+            services.AddScoped<IForecastingDataContext, ForecastingDataContext>(provider => provider.GetService<ForecastingDataContext>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
