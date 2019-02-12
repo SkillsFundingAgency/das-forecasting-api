@@ -49,6 +49,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         }
 
         [Test]
+        public async Task Then_If_There_Are_No_Projections_Null_Is_Returned()
+        {
+            //Arrange
+            _accountProjectionRepository
+                .Setup(x => x.GetAccountProjectionByAccountId(11))
+                .ReturnsAsync(new List<Domain.Entities.AccountProjection>());
+
+            //Act
+            var actual = await _accountProjectionService.GetExpiringFunds(11);
+
+            //Assert
+            Assert.IsNull(actual);
+        }
+
+        [Test]
         public async Task Then_The_Results_Are_Mapped_To_The_Domain_Model()
         {
             //Act

@@ -19,11 +19,6 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
         {
             var projections = await _repository.GetAccountProjectionByAccountId(expectedAccountId);
 
-            if (!projections.Any())
-            {
-                return null;
-            }
-
             var projectionForDate = projections.FirstOrDefault();
             if (projectionForDate == null)
             {

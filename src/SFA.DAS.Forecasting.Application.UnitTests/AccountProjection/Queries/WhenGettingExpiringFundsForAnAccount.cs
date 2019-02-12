@@ -100,5 +100,19 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             Assert.AreEqual(ExpectedAccountId, actual.AccountId);
             Assert.AreEqual(expectedDate, actual.ProjectionGenerationDate);
         }
+
+        [Test]
+        public async Task Then_If_The_Service_Returns_Null_Then_The_Values_Are_Set_To_Null()
+        {
+            //Arrange
+            _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync((AccountProjectionExpiry)null);
+            
+            //Act
+            var actual = await _handler.Handle(_query, _cancellationToken);
+
+            //Assert
+            Assert.IsNull(actual.ExpiryAmounts);
+            Assert.IsNull(actual.ProjectionGenerationDate);
+        }
     }
 }
