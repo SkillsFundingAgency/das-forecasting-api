@@ -13,26 +13,45 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
     {
         private Mock<IAccountProjectionRepository> _accountProjectionRepository;
         private AccountProjectionService _accountProjectionService;
-        private Domain.Entities.AccountProjection _expectedProjection;
+        private List<Domain.Entities.AccountProjection> _expectedProjection;
         private const long ExpectedAccountId = 55437;
         private readonly DateTime _expectedGenerationDate = new DateTime(2018,10,24);
 
         [SetUp]
         public void Arrange()
         {
-            _expectedProjection = new Domain.Entities.AccountProjection
+            _expectedProjection = new List<Domain.Entities.AccountProjection>
             {
-                AccountId = ExpectedAccountId,
-                ExpiredFunds = 150.55m,
-                Month = 10,
-                Year = 2018,
-                ProjectionCreationDate = _expectedGenerationDate
+                new Domain.Entities.AccountProjection
+                {
+                    AccountId = ExpectedAccountId,
+                    ExpiredFunds = 150.55m,
+                    Month = 10,
+                    Year = 2018,
+                    ProjectionCreationDate = _expectedGenerationDate
+                },
+                new Domain.Entities.AccountProjection
+                {
+                    AccountId = ExpectedAccountId,
+                    ExpiredFunds = 0m,
+                    Month = 7,
+                    Year = 2018,
+                    ProjectionCreationDate = _expectedGenerationDate
+                },
+                new Domain.Entities.AccountProjection
+                {
+                    AccountId = ExpectedAccountId,
+                    ExpiredFunds = 170.55m,
+                    Month = 8,
+                    Year = 2018,
+                    ProjectionCreationDate = _expectedGenerationDate
+                }
             };
 
             _accountProjectionRepository = new Mock<IAccountProjectionRepository>();
             _accountProjectionRepository
                 .Setup(x => x.GetAccountProjectionByAccountId(ExpectedAccountId))
-                .ReturnsAsync(new List<Domain.Entities.AccountProjection>{_expectedProjection});
+                .ReturnsAsync(_expectedProjection);
 
             _accountProjectionService = new AccountProjectionService(_accountProjectionRepository.Object);
         }
@@ -72,10 +91,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
             //Assert
             Assert.AreEqual(ExpectedAccountId,actual.AccountId);
             Assert.AreEqual(_expectedGenerationDate,actual.ProjectionGenerationDate);
-            var expiryAmounts = actual.ExpiryAmounts.FirstOrDefault();
+            var expiryAmounts = actual.ExpiryAmounts.LastOrDefault();
             Assert.IsNotNull(expiryAmounts);
-            Assert.AreEqual(_expectedProjection.ExpiredFunds,expiryAmounts.Amount);
-            Assert.AreEqual(new DateTime(_expectedProjection.Year,_expectedProjection.Month,1), expiryAmounts.PayrollDate);
+            Assert.AreEqual(_expectedProjection[0].ExpiredFunds,expiryAmounts.Amount);
+            Assert.AreEqual(new DateTime(_expectedProjection[0].Year,_expectedProjection[0].Month,23), expiryAmounts.PayrollDate);
+        }
+
+        [Test]
+        public async Task Then_Zero_Values_Are_Filtered_Out_And_The_Results_Are_Ordered_Date_Asc()
+        {
+            //Act
+            var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
+
+            //Assert
+            Assert.AreEqual(2, actual.ExpiryAmounts.Count);
+            Assert.AreEqual(_expectedProjection[2].ExpiredFunds, actual.ExpiryAmounts[0].Amount);
         }
     }
 }

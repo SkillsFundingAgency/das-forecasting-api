@@ -36,8 +36,8 @@ namespace SFA.DAS.Forecasting.Api
                     configuration["AppName"].Split(","),
                     configuration["Environment"],
                     configuration["Version"]
-                )
-                .Build();
+                ).Build();
+
             Configuration = config;
         }
 

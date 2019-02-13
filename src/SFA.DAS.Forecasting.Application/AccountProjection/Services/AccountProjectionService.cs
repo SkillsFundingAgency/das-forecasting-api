@@ -28,17 +28,17 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
             var projectionDate = projectionForDate.ProjectionCreationDate;
 
             var expiryAmounts = new List<ExpiryAmounts>();
-            foreach (var projection in projections)
+            foreach (var projection in projections.Where(c => !c.ExpiredFunds.Equals(0)))
             {
                 expiryAmounts.Add(
                     new ExpiryAmounts(
                         projection.ExpiredFunds,
-                        new DateTime(projection.Year,projection.Month,1)
+                        new DateTime(projection.Year,projection.Month,23)
                         )
                     );
             }
             
-            return new AccountProjectionExpiry(expectedAccountId, projectionDate,expiryAmounts);
+            return new AccountProjectionExpiry(expectedAccountId, projectionDate,expiryAmounts.OrderBy(c=>c.PayrollDate).ToList());
         }
     }
 }
