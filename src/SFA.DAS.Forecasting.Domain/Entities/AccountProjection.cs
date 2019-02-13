@@ -7,7 +7,7 @@ namespace SFA.DAS.Forecasting.Domain.Entities
         public long Id { get; set; } 
         public long AccountId { get; set; } 
         public DateTime ProjectionCreationDate { get; set; } 
-        public short ProjectionGenerationType { get; set; } 
+        public byte ProjectionGenerationType { get; set; } 
         public short Month { get; set; } 
         public int Year { get; set; } 
         public decimal LevyFundsIn { get; set; }
