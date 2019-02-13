@@ -49,7 +49,7 @@ steps:
   displayName: 'Publish Website'
   inputs:
     command: publish
-    publishWebProjects: true
+    projects: 'src/**/SFA.DAS.Forecasting.Api/SFA.DAS.Forecasting.Api.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
 
 - task: CopyFiles@2
