@@ -7,6 +7,7 @@ using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 
 namespace SFA.DAS.Forecasting.Api.Controllers
 {
+    [Route("api/accounts/{accountId}/[controller]/")]
     public class AccountProjectionController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Forecasting.Api.Controllers
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Route("expiring-funds")]
         public async Task<IActionResult> GetAccountExpiredFunds(long accountId)
         {
             try
