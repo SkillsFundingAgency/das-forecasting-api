@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Data.Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Data", "SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj", "{974FC4A6-C1EF-404E-ACC4-F823735BBC39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Application.UnitTests", "SFA.DAS.Forecasting.Application.UnitTests\SFA.DAS.Forecasting.Application.UnitTests.csproj", "{93637BFE-D193-4356-8DB1-0D120FD75A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Application.UnitTests", "SFA.DAS.Forecasting.Application.UnitTests\SFA.DAS.Forecasting.Application.UnitTests.csproj", "{93637BFE-D193-4356-8DB1-0D120FD75A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Application", "SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj", "{11CF96C2-FF7C-40B4-8F2A-4B70DD9F8F3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Application", "SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj", "{11CF96C2-FF7C-40B4-8F2A-4B70DD9F8F3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Api.UnitTests", "SFA.DAS.Forecasting.Api.UnitTests\SFA.DAS.Forecasting.Api.UnitTests.csproj", "{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{11CF96C2-FF7C-40B4-8F2A-4B70DD9F8F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11CF96C2-FF7C-40B4-8F2A-4B70DD9F8F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11CF96C2-FF7C-40B4-8F2A-4B70DD9F8F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{7551E081-6024-47F4-B9F3-5DC6DC5C73B5} = {C4A78968-3363-4C73-B9F9-8F57626C1FD4}
 		{955441BB-94D7-4EE6-A8BF-B5F81C05E1E2} = {C4A78968-3363-4C73-B9F9-8F57626C1FD4}
 		{93637BFE-D193-4356-8DB1-0D120FD75A9E} = {C4A78968-3363-4C73-B9F9-8F57626C1FD4}
+		{6DCC76AC-3BCD-4685-8D5A-5C11FC3DD785} = {C4A78968-3363-4C73-B9F9-8F57626C1FD4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBF56296-1174-43DC-A0A4-E070F9ACA90A}

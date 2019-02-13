@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
 
             return new GetAccountExpiringFundsResult
             {
-                AccountId = expiringFunds?.AccountId ?? request.AccountId,
+                AccountId = expiringFunds?.AccountId,
                 ExpiryAmounts = expiringFunds?.ExpiryAmounts,
                 ProjectionGenerationDate = expiringFunds?.ProjectionGenerationDate
             };
