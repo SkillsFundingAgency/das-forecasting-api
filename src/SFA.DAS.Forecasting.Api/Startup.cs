@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,8 +12,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Data.Repository;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Configuration;
+using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 
 namespace SFA.DAS.Forecasting.Api
@@ -78,6 +84,11 @@ namespace SFA.DAS.Forecasting.Api
                 services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
             }
 
+            services.AddMediatR(typeof(GetAccountExpiringFundsQueryHandler).Assembly);
+            services.AddScoped(typeof(IValidator<GetAccountExpiringFundsQuery>), typeof(GetAccountExpiryValidator));
+            services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
+            services.AddTransient<IAccountProjectionService, AccountProjectionService>();
+
             services.AddMvc(o =>
             {
                 if (!Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
@@ -87,7 +98,7 @@ namespace SFA.DAS.Forecasting.Api
 
 
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             services.AddDbContext<ForecastingDataContext>(options => options.UseSqlServer(forecastingConfiguration.Value.ConnectionString));
             services.AddScoped<IForecastingDataContext, ForecastingDataContext>(provider => provider.GetService<ForecastingDataContext>());
         }
