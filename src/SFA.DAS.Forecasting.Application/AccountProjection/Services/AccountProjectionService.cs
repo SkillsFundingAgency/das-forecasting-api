@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
@@ -25,20 +24,13 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
                 return null;
             }
 
-            var projectionDate = projectionForDate.ProjectionCreationDate;
+            var expiryAmounts = projections
+                .Where(c => !c.ExpiredFunds.Equals(0))
+                .Select(projection => 
+                    new ExpiryAmounts(projection.ExpiredFunds, new DateTime(projection.Year, projection.Month, 23)))
+                .ToList();
 
-            var expiryAmounts = new List<ExpiryAmounts>();
-            foreach (var projection in projections.Where(c => !c.ExpiredFunds.Equals(0)))
-            {
-                expiryAmounts.Add(
-                    new ExpiryAmounts(
-                        projection.ExpiredFunds,
-                        new DateTime(projection.Year,projection.Month,23)
-                        )
-                    );
-            }
-            
-            return new AccountProjectionExpiry(expectedAccountId, projectionDate,expiryAmounts.OrderBy(c=>c.PayrollDate).ToList());
+            return new AccountProjectionExpiry(expectedAccountId, projectionForDate.ProjectionCreationDate, expiryAmounts.OrderBy(c=>c.PayrollDate).ToList());
         }
     }
 }

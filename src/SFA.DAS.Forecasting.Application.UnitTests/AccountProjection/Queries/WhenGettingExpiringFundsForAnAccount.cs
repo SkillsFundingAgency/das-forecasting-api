@@ -102,7 +102,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         }
 
         [Test]
-        public async Task Then_If_The_Service_Returns_Null_Then_The_Values_Are_Set_To_Null()
+        public async Task Then_If_The_Service_Returns_Null_Then_Null_Is_Returned()
         {
             //Arrange
             _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync((AccountProjectionExpiry)null);
@@ -111,8 +111,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             var actual = await _handler.Handle(_query, _cancellationToken);
 
             //Assert
-            Assert.IsNull(actual.ExpiryAmounts);
-            Assert.IsNull(actual.ProjectionGenerationDate);
+            Assert.IsNull(actual);
         }
     }
 }

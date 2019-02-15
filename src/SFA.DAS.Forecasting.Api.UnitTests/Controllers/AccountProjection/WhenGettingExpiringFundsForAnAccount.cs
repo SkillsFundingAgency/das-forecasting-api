@@ -92,7 +92,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
             Assert.AreEqual(HttpStatusCode.BadRequest, (HttpStatusCode)result.StatusCode);
             var actualError = result.Value as ArgumentErrorViewModel;
             Assert.IsNotNull(actualError);
-            Assert.AreEqual($"{expectedValidationMessage}\r\nParameter name: {expectedParam}", actualError.Message);
+            Assert.AreEqual($"{expectedValidationMessage}{Environment.NewLine}Parameter name: {expectedParam}", actualError.Message);
             Assert.AreEqual(expectedParam, actualError.Params);
         }
     }
