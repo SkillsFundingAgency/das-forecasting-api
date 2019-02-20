@@ -112,7 +112,7 @@
                             },
                             {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference('applicationInsights').outputs.InstrumentationKey.value]"
+                                "value": "[reference('api-app-insights').outputs.InstrumentationKey.value]"
                             },
                             {
                                 "name": "ASPNETCORE_ENVIRONMENT",
