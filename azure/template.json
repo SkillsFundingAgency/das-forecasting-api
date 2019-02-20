@@ -41,8 +41,7 @@
         }
     },
     "variables": {
-        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName')))]",
-        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-fcastapi-as')]",
+        "apiAppServiceName": "[toLower(concat('das-', parameters('resourceEnvironmentName'), '-fcastapi-as'))]",
         "serverFarmId": "[if(parameters('useASE'), resourceId(parameters('apiAppServicePlanResourceGroup'),'Microsoft.Web/serverfarms',parameters('apiAppServicePlanName')), '')]"
     },
     "resources": [{
