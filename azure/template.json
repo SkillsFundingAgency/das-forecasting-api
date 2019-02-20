@@ -23,6 +23,9 @@
         "configurationStorageConnectionString": {
             "type": "securestring"
         },
+        "loggingRedisConnectionString": {
+            "type": "securestring"
+        },        
         "apiCustomHostName": {
             "type": "string"
         },
@@ -85,7 +88,7 @@
                         "value": "[parameters('keyVaultResourceGroup')]"
                     },
                     "serverFarmId": {
-                      "value": "[variables('serverFarmId')]"
+                        "value": "[variables('serverFarmId')]"
                     }
                 }
             },
@@ -129,6 +132,13 @@
                                 "value": "[toUpper(parameters('environmentName'))]"
                             }
                         ]
+                    },
+                    "appServiceConnectionStrings": {
+                        "value": [{
+                            "name": "RedisLogging",
+                            "connectionString": "[parameters('loggingRedisConnectionString')]",
+                            "type": "Custom"
+                        }]
                     },
                     "customHostName": {
                         "value": "[parameters('apiCustomHostName')]"
