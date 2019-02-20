@@ -13,12 +13,6 @@
             "type": "string",
             "defaultValue": ""
         },
-        "appServicePlanName": {
-            "type": "string"
-        },
-        "appServicePlanResourceGroup": {
-            "type": "string"
-        },
         "configurationStorageConnectionString": {
             "type": "string"
         },
@@ -98,10 +92,10 @@
                         "value": "[variables('apiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('appServicePlanName')]"
+                        "value": "[variables('apiAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('appServicePlanResourceGroup')]"
+                        "value": "[resourceGroup().name]"
                     },
                     "deployStagingSlot": {
                         "value": true
