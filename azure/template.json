@@ -6,30 +6,46 @@
             "type": "string",
             "metadata": {
                 "description": "The base url for templates"
-              }            
-        },        
+            }
+        },
         "resourceEnvironmentName": {
             "type": "string"
         },
         "environmentName": {
             "type": "string"
         },
-        "sharedAppServicePlanName": {
+        "apiAppServicePlanName": {
             "type": "string"
         },
-        "sharedResourceGroup": {
+        "apiAppServicePlanResourceGroup": {
             "type": "string"
         },
         "configurationStorageConnectionString": {
             "type": "securestring"
+        },
+        "apiCustomHostName": {
+            "type": "string"
+        },
+        "apiKeyVaultCertificateName": {
+            "type": "string"
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "keyVaultResourceGroup": {
+            "type": "string"
+        },
+        "useASE": {
+            "type": "bool",
+            "defaultValue": false
         }
     },
     "variables": {
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName')))]",
-        "appServiceName": "[concat(variables('resourceNamePrefix'), '-fcastapi-as')]"
+        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), '-fcastapi-as')]",
+        "serverFarmId": "[if(parameters('useASE'), resourceId(parameters('apiAppServicePlanResourceGroup'),'Microsoft.Web/serverfarms',parameters('apiAppServicePlanName')), '')]"
     },
-    "resources": [
-        {
+    "resources": [{
             "apiVersion": "2017-05-10",
             "name": "applicationInsights",
             "type": "Microsoft.Resources/deployments",
@@ -41,13 +57,40 @@
                 },
                 "parameters": {
                     "appInsightsName": {
-                        "value": "[variables('appServiceName')]"
+                        "value": "[variables('apiAppServiceName')]"
                     },
                     "attachedService": {
-                        "value": "[variables('appServiceName')]"
+                        "value": "[variables('apiAppServiceName')]"
                     }
                 }
             }
+        },
+        {
+            "apiVersion": "2017-08-01",
+            "name": "keyVaultCertificate",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('deploymentUrlBase'),'app-service-certificate.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultCertificateName": {
+                        "value": "[parameters('apiKeyVaultCertificateName')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
+                    "keyVaultResourceGroup": {
+                        "value": "[parameters('keyVaultResourceGroup')]"
+                    },
+                    "serverFarmId": {
+                      "value": "[variables('serverFarmId')]"
+                    }
+                }
+            },
+            "dependsOn": []
         },
         {
             "apiVersion": "2017-05-10",
@@ -61,17 +104,16 @@
                 },
                 "parameters": {
                     "appServiceName": {
-                        "value": "[variables('appServiceName')]"
+                        "value": "[variables('apiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedAppServicePlanName')]"
+                        "value": "[parameters('apiAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedResourceGroup')]"
+                        "value": "[parameters('apiAppServicePlanResourceGroup')]"
                     },
                     "appServiceAppSettings": {
-                        "value": [
-                            {
+                        "value": [{
                                 "name": "Environment",
                                 "value": "[parameters('environmentName')]"
                             },
@@ -90,10 +132,13 @@
                         ]
                     },
                     "customHostName": {
-                        "value": ""
+                        "value": "[parameters('apiCustomHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": ""
+                        "value": "[reference('keyVaultCertificate').outputs.CertificateThumbprint.value]"
+                    },
+                    "appKind": {
+                        "value": "api"
                     }
                 }
             }
@@ -102,7 +147,7 @@
     "outputs": {
         "appServiceName": {
             "type": "string",
-            "value": "[variables('appServiceName')]"
+            "value": "[variables('apiAppServiceName')]"
         }
     }
 }
