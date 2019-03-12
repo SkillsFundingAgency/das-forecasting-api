@@ -14,7 +14,7 @@
             "defaultValue": ""
         },
         "configurationStorageConnectionString": {
-            "type": "string"
+            "type": "securestring"
         },
         "environmentName": {
             "type": "string"
@@ -23,7 +23,7 @@
             "type": "string"
         },
         "loggingRedisConnectionString": {
-            "type": "string"
+            "type": "securestring"
         },
         "loggingRedisKey": {
             "type": "string"
