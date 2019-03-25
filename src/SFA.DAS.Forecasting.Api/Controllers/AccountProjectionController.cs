@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Api.Controllers
             {
                 var response = await _mediator.Send(new GetAccountExpiringFundsQuery { AccountId = accountId });
 
-                if (response.ExpiryAmounts == null)
+                if (response == null)
                 {
                     return NotFound();
                 }
