@@ -58,12 +58,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
             //Arrange
             _mediator.Setup(x => x.Send(It.Is<GetAccountExpiringFundsQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetAccountExpiringFundsResult
-                {
-                    AccountId = null,
-                    ExpiryAmounts = null,
-                    ProjectionGenerationDate = null
-                });
+                .ReturnsAsync((GetAccountExpiringFundsResult) null);
 
             //Act
             var actual = await _accountProjectionController.GetAccountExpiredFunds(ExpectedAccountId);
