@@ -32,5 +32,26 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
 
             return new AccountProjectionExpiry(expectedAccountId, projectionForDate.ProjectionCreationDate, expiryAmounts.OrderBy(c=>c.PayrollDate).ToList());
         }
+
+        public async Task<dynamic> GetFinanceProjections(long accountId)
+        {
+            var projections = await _repository.GetAccountProjectionByAccountId(accountId);
+
+            var projectionForDate = projections.FirstOrDefault();
+            if (projectionForDate == null)
+            {
+                return null;
+            }
+
+            var ModifiedProjections = projections.Select(x => new dynamic
+            {
+                Date = new DateTime(x.Year, x.Month, 1),
+                FundsInTotal = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
+                FundsOutTotal = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining +
+                                x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments
+            }).ToList().Where(x => x.Date >= DateTime.Today).OrderBy(x => x.Date).Take(12);
+
+            return ModifiedProjections;
+        }
     }
 }
