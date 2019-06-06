@@ -43,5 +43,33 @@ namespace SFA.DAS.Forecasting.Api.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [Route("expiring-funds")]
+        public async Task<IActionResult> GetProjectedFundingSummary(long accountId, int numberOfMonths = 12)
+        {
+            try
+            {
+                var response = await _mediator.Send(new GetAccountProjectionSummaryQuery { AccountId = accountId, NumberOfMonths = numberOfMonths });
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(response);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(new ArgumentErrorViewModel
+                {
+                    Message = e.Message,
+                    Params = e.ParamName
+                });
+            }
+        }
     }
 }
