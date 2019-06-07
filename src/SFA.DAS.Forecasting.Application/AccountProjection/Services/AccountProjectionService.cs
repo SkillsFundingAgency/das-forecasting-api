@@ -44,14 +44,14 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
                 return null;
             }
 
-            IEnumerable<dynamic> modifiedProjections = projections.Select(x => new
+            var modifiedProjections = projections.Select(x => new
             {
                 Date = new DateTime(x.Year, x.Month, 1),
                 FundsIn = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
                 FundsOut = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining + x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments
             }).ToList().Where(x => x.Date >= startDate).OrderBy(x => x.Date).Take(numberOfMonths);
 
-            return new AccountProjectionSummary(accountId, startDate, numberOfMonths, modifiedProjections.Sum(x => (decimal)x.FundsIn), modifiedProjections.Sum(x => (decimal)x.FundsOut));
+            return new AccountProjectionSummary(accountId, startDate, numberOfMonths, modifiedProjections.Sum(x => x.FundsIn), modifiedProjections.Sum(x => x.FundsOut));
         }
     }
 }
