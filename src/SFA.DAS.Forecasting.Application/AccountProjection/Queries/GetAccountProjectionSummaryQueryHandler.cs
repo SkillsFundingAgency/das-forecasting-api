@@ -12,7 +12,6 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
     {
         private readonly IValidator<GetAccountProjectionSummaryQuery> _validator;
         private readonly IAccountProjectionService _service;
-        const int DefaultNumberOfMonths = 12;
 
         public GetAccountProjectionSummaryQueryHandler(IValidator<GetAccountProjectionSummaryQuery> validator, IAccountProjectionService service)
         {
@@ -29,7 +28,7 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
                 throw new ArgumentException("The following parameters have failed validation", validationResult.ValidationDictionary.Select(c => c.Key).Aggregate((item1, item2) => item1 + ", " + item2));
             }
 
-            var projectionSummary = await _service.GetProjectionSummary(request.AccountId, DateTime.Today, DefaultNumberOfMonths);
+            var projectionSummary = await _service.GetProjectionSummary(request.AccountId, DateTime.Today, request.NumberOfMonths);
 
             if (projectionSummary == null)
             {
@@ -40,7 +39,7 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
             {
                 AccountId = projectionSummary.AccountId,
                 ProjectionStartDate = DateTime.Today,
-                NumberOfMonths = DefaultNumberOfMonths,
+                NumberOfMonths = request.NumberOfMonths,
                 FundsIn = projectionSummary.FundsIn,
                 FundsOut = projectionSummary.FundsOut
             };

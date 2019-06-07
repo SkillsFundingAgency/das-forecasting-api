@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Api.Controllers
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        [Route("expiring-funds")]
+        [Route("projected-summary")]
         public async Task<IActionResult> GetProjectedFundingSummary(long accountId, int numberOfMonths = 12)
         {
             try
