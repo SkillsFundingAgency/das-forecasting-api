@@ -85,6 +85,11 @@ namespace SFA.DAS.Forecasting.Api
 
             services.AddMediatR(typeof(GetAccountExpiringFundsQueryHandler).Assembly);
             services.AddScoped(typeof(IValidator<GetAccountExpiringFundsQuery>), typeof(GetAccountExpiryValidator));
+
+            services.AddMediatR(typeof(GetAccountProjectionSummaryQuery).Assembly);
+            services.AddScoped(typeof(IValidator<GetAccountProjectionSummaryQuery>),
+                typeof(GetAccountProjectionSummaryValidator));
+
             services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
             services.AddTransient<IAccountProjectionService, AccountProjectionService>();
 
