@@ -78,7 +78,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         public async Task Then_The_FundsIn_Projections_Are_Correct_For_The_Account(int numberOfMonths)
         {
             // arrange
-            var expectedFundsIn = (DefaultLevyFundsIn + DefaultTransferInCostOfTraining + DefaultTransferInCompletionPayments) * numberOfMonths;
+            var expectedFundsIn = (DefaultLevyFundsIn) * numberOfMonths;
 
             //Act
             var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
@@ -95,7 +95,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         public async Task Then_The_FundsOut_Projections_Are_Correct_For_The_Account(int numberOfMonths)
         {
             // arrange
-            var expectedFundsOut = (DefaultLevyFundedCostOfTraining + DefaultTransferOutCostOfTraining + DefaultLevyFundedCompletionPayments + DefaultTransferOutCompletionPayments) * numberOfMonths;
+            var expectedFundsOut = (DefaultLevyFundedCostOfTraining + DefaultLevyFundedCompletionPayments + (DefaultTransferOutCostOfTraining + DefaultTransferOutCompletionPayments) - (DefaultTransferInCostOfTraining + DefaultTransferInCompletionPayments)) * numberOfMonths;
 
             //Act
             var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
