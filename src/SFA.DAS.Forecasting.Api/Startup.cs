@@ -93,6 +93,8 @@ namespace SFA.DAS.Forecasting.Api
             services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
             services.AddTransient<IAccountProjectionService, AccountProjectionService>();
 
+            services.AddHealthChecks();
+
             services.AddMvc(o =>
             {
                 if (!Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
@@ -119,6 +121,7 @@ namespace SFA.DAS.Forecasting.Api
                 app.UseAuthentication();
             }
 
+            app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
