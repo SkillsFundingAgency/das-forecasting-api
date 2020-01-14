@@ -118,8 +118,7 @@
                 }
             },
             "dependsOn": [
-                "api-app-insights",
-                "api-app-service-plan"
+                "api-app-insights"
             ]
         },
         {
