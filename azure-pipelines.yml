@@ -12,25 +12,35 @@ workspace:
 variables:
   buildConfiguration: 'release'
 
-resources:
-  repositories:
-  - repository: self
-  - repository: das-platform-building-blocks
-    type: github
-    name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.3.31
-    endpoint: GitHub (SFA)
-
 pool:
   name: 'DAS - Continuous Integration Agents'
   demands: LATEST_DOTNET_VERSION -equals 2.2
 
 steps:
-- template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
+- task: gittools.gitversion-preview.gitversion-task.GitVersion@5
+  displayName: GitVersion
+  inputs:
+    updateAssemblyInfo: true
 
-- template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
-  parameters:
-    SonarCloud: false
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: 'src/**/*.csproj'
+    noCache: true
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: 'src/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
+    
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '**/*.UnitTests.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-build'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Website'
