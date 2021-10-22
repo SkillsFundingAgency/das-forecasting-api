@@ -21,30 +21,13 @@ resources:
     endpoint: SkillsFundingAgency
 
 pool:
-  name: 'DAS - Continuous Integration Agents'
+  name: DAS - Continuous Integration Agents
+  demands: LATEST_DOTNET_VERSION -equals 3.1
 
 steps:
 - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
 
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: 'src/**/*.csproj'
-    noCache: true
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    projects: 'src/**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
-    
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '**/*.UnitTests.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build'
+- template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Website'
