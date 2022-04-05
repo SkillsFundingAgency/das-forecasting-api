@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SFA.DAS.Forecasting.Api.Extensions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Data.Repository;
@@ -18,7 +16,8 @@ using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Api.Extensions;
+using System;
+using System.IO;
 
 namespace SFA.DAS.Forecasting.Api
 {
@@ -61,6 +60,7 @@ namespace SFA.DAS.Forecasting.Api
                     o.AddPolicy("default", policy =>
                     {
                         policy.RequireAuthenticatedUser();
+                        policy.RequireRole("Default");
                     });
                 });
                 services.AddAuthentication(auth =>
@@ -72,11 +72,7 @@ namespace SFA.DAS.Forecasting.Api
                     auth.Authority = $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Value.Tenant}";
                     auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
-                        ValidAudiences = new List<string>
-                        {
-                            azureActiveDirectoryConfiguration.Value.Identifier,
-                            azureActiveDirectoryConfiguration.Value.Id
-                        }
+                        ValidAudiences = azureActiveDirectoryConfiguration.Value.Identifier.Split(",")
                     };
                 });
                 services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
