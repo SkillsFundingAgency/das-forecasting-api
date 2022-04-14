@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
@@ -59,6 +60,11 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
             }).ToList().Where(x => x.Date >= startDate).OrderBy(x => x.Date).Take(numberOfMonths);
 
             return new AccountProjectionSummary(accountId, startDate, numberOfMonths, modifiedProjections.Sum(x => x.FundsIn), modifiedProjections.Sum(x => x.FundsOut));
+        }
+
+        public async Task<AccountProjectionDetail> GetProjectionDetail(long accountId, DateTime startDate, int numberOfMonths)
+        {
+            return new AccountProjectionDetail();
         }
     }
 }

@@ -88,6 +88,9 @@ namespace SFA.DAS.Forecasting.Api
             services.AddMediatR(typeof(GetAccountProjectionSummaryQuery).Assembly);
             services.AddScoped(typeof(IValidator<GetAccountProjectionSummaryQuery>),
                 typeof(GetAccountProjectionSummaryValidator));
+            services.AddScoped(typeof(IValidator<GetAccountProjectionDetailQuery>),
+                typeof(GetAccountProjectionDetailValidator));
+
 
             services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
             services.AddTransient<IAccountProjectionService, AccountProjectionService>();

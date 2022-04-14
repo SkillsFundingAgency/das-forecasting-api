@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
 
         private const long ExpectedAccountId = 123234;
         private const int NumberOfMonths = 12;
+        private readonly DateTime ExpectedStartDate = DateTime.Today;
 
         [SetUp]
         public void Arrange()
@@ -41,7 +42,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
         public async Task Then_The_Projections_Are_Returned()
         {
             //Act
-            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, NumberOfMonths);
+            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate, NumberOfMonths);
 
             //Assert
             Assert.IsNotNull(actual);
@@ -63,7 +64,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
                 .ReturnsAsync((GetAccountProjectionDetailQueryResult) null);
 
             //Act
-            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, NumberOfMonths);
+            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate,NumberOfMonths);
 
             //Assert
             var result = actual as NotFoundResult;
@@ -81,7 +82,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
                 .ThrowsAsync(new ArgumentException(expectedValidationMessage, expectedParam));
 
             //Act
-            var actual = await _accountProjectionController.GetProjectedFundingDetail(0, NumberOfMonths);
+            var actual = await _accountProjectionController.GetProjectedFundingDetail(0, ExpectedStartDate, NumberOfMonths);
 
             //Assert
             var result = actual as ObjectResult;

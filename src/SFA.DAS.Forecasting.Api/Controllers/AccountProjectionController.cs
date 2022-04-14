@@ -74,11 +74,18 @@ namespace SFA.DAS.Forecasting.Api.Controllers
 
         [HttpGet]
         [Route("detail")]
-        public async Task<IActionResult> GetProjectedFundingDetail(long accountId, int numberOfMonths)
+        public async Task<IActionResult> GetProjectedFundingDetail(long accountId, DateTime startDate, int numberOfMonths)
         {
             try
             {
-                var response = await _mediator.Send(new GetAccountProjectionDetailQuery { AccountId = accountId, NumberOfMonths = numberOfMonths });
+                var query = new GetAccountProjectionDetailQuery
+                {
+                    AccountId = accountId,
+                    StartDate = startDate,
+                    NumberOfMonths = numberOfMonths
+                };
+                
+                var response = await _mediator.Send(query);
 
                 if (response == null)
                 {
