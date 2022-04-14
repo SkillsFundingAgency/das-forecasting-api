@@ -118,7 +118,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
 
             //Assert
             Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-            Assert.AreEqual(DateTime.Today, actual.ProjectionStartDate);
+            Assert.AreEqual(ExpectedStartDate, actual.ProjectionStartDate);
             Assert.AreEqual(expectedNumberOfmonths, actual.NumberOfMonths);
         }
 

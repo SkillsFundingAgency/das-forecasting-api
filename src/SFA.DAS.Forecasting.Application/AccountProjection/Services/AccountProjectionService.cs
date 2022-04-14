@@ -64,7 +64,44 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
 
         public async Task<AccountProjectionDetail> GetProjectionDetail(long accountId, DateTime startDate, int numberOfMonths)
         {
-            return new AccountProjectionDetail();
+            var projections = await _repository.GetAccountProjectionByAccountId(accountId);
+
+            var projectionForDate = projections.FirstOrDefault();
+            if (projectionForDate == null)
+            {
+                return new AccountProjectionDetail
+                {
+                    AccountId = accountId,
+                    ProjectionStartDate = startDate,
+                    NumberOfMonths = numberOfMonths,
+                    Breakdown = new List<AccountProjectionDetail.ProjectionMonth>()
+                };
+            }
+
+            var modifiedProjections = projections.Where(x => x.Date >= startDate)
+                .OrderBy(x => x.Date)
+                .Take(numberOfMonths);
+
+            return new AccountProjectionDetail
+            {
+                AccountId = accountId,
+                ProjectionStartDate = startDate,
+                NumberOfMonths = numberOfMonths,
+                Breakdown = modifiedProjections.Select(x => new AccountProjectionDetail.ProjectionMonth
+                {
+                    Month = x.Month,
+                    Year = x.Year,
+                    FundsIn = x.LevyFundsIn,
+                    FundsOut = new AccountProjectionDetail.FundsOut
+                    {
+                        Commitments = x.LevyFundedCostOfTraining + x.LevyFundedCompletionPayments,
+                        ApprovedPledgeApplications = x.ApprovedPledgeApplicationCost,
+                        AcceptedPledgeApplications = x.AcceptedPledgeApplicationCost,
+                        PledgeOriginatedCommitments = x.PledgeOriginatedCommitmentCost,
+                        TransferConnections = (x.TransferOutCostOfTraining + x.TransferOutCompletionPayments) - (x.ApprovedPledgeApplicationCost + x.AcceptedPledgeApplicationCost + x.PledgeOriginatedCommitmentCost)
+                    }
+                }).ToList()
+            };
         }
     }
 }
