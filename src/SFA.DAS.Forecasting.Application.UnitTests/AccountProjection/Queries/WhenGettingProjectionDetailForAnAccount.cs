@@ -98,20 +98,18 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         public async Task Then_The_Values_Are_Returned_In_The_Response()
         {
             //Arrange
-            decimal expectedFundsIn = 100.00M;
-            decimal expectedFundsOut = 999.99M;
-            int expectedNumberOfmonths = 6;
+            const int expectedNumberOfMonths = 6;
             
             var accountProjectionDetail = new AccountProjectionDetail
             {
                 AccountId = ExpectedAccountId,
                 ProjectionStartDate = ExpectedStartDate,
-                NumberOfMonths = expectedNumberOfmonths,
+                NumberOfMonths = expectedNumberOfMonths,
                 Breakdown = _expectedBreakdown
             };
 
-            _service.Setup(x => x.GetProjectionDetail(ExpectedAccountId, ExpectedStartDate, expectedNumberOfmonths)).ReturnsAsync(accountProjectionDetail);
-            _query.NumberOfMonths = expectedNumberOfmonths;
+            _service.Setup(x => x.GetProjectionDetail(ExpectedAccountId, ExpectedStartDate, expectedNumberOfMonths)).ReturnsAsync(accountProjectionDetail);
+            _query.NumberOfMonths = expectedNumberOfMonths;
 
             //Act
             var actual = await _handler.Handle(_query, _cancellationToken);
@@ -119,7 +117,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             //Assert
             Assert.AreEqual(ExpectedAccountId, actual.AccountId);
             Assert.AreEqual(ExpectedStartDate, actual.ProjectionStartDate);
-            Assert.AreEqual(expectedNumberOfmonths, actual.NumberOfMonths);
+            Assert.AreEqual(expectedNumberOfMonths, actual.NumberOfMonths);
         }
 
         [Test]
