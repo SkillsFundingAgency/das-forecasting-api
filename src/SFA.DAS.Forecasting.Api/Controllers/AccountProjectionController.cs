@@ -71,5 +71,37 @@ namespace SFA.DAS.Forecasting.Api.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        [Route("detail")]
+        public async Task<IActionResult> GetProjectedFundingDetail(long accountId, DateTime startDate, int numberOfMonths)
+        {
+            try
+            {
+                var query = new GetAccountProjectionDetailQuery
+                {
+                    AccountId = accountId,
+                    StartDate = startDate,
+                    NumberOfMonths = numberOfMonths
+                };
+                
+                var response = await _mediator.Send(query);
+
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(response);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(new ArgumentErrorViewModel
+                {
+                    Message = e.Message,
+                    Params = e.ParamName
+                });
+            }
+        }
     }
 }

@@ -20,6 +20,10 @@ namespace SFA.DAS.Forecasting.Domain.Entities
         public decimal ExpiredFunds { get; set; }
         public decimal FutureFunds { get; set; } 
         public decimal CoInvestmentEmployer { get; set; } 
-        public decimal CoInvestmentGovernment { get; set; } 
+        public decimal CoInvestmentGovernment { get; set; }
+        public decimal ApprovedPledgeApplicationCost { get; set; }
+        public decimal AcceptedPledgeApplicationCost { get; set; }
+        public decimal PledgeOriginatedCommitmentCost { get; set; }
+        public DateTime Date => new DateTime(Year, Month, 1);
     }
 }
