@@ -91,7 +91,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('api-app-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat('api-app-insights', '-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
@@ -125,10 +125,7 @@
                         "value": "[parameters('backEndAccessRestrictions')]"
                     }
                 }
-            },
-            "dependsOn": [
-                "api-app-insights"
-            ]
+            }
         },
         {
             "condition": "[greater(length(parameters('apiCustomHostName')), 0)]",
@@ -156,9 +153,7 @@
                         "value": "[resourceId(parameters('sharedAppServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('sharedBackendAppServicePlanName'))]"
                     }
                 }
-            },
-            "dependsOn": [
-            ]
+            }
         },
         {
             "apiVersion": "2017-08-01",
@@ -178,9 +173,7 @@
                         "value": "[variables('apiAppServiceName')]"
                     }
                 }
-            },
-            "dependsOn": [
-            ]
+            }
         }
     ],
     "outputs": {
