@@ -41,10 +41,12 @@
         "keyVaultResourceGroup": {
             "type": "string"
         },
-        "appServiceAllowedIPs": {
-            "type": "array",
-            "defaultValue": [
-            ]
+        "backEndAccessRestrictions": {
+            "type": "array"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
@@ -55,7 +57,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "api-app-service",
+            "name": "[concat('api-app-service', '-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -89,7 +91,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('api-app-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat('api-app-insights', '-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
@@ -117,21 +119,18 @@
                         "value": "[parameters('apiCustomHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[if(greater(length(parameters('apiCustomHostname')), 0), reference('api-app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
+                        "value": "[if(greater(length(parameters('apiCustomHostname')), 0), reference(concat(variables('apiAppServiceName'),'-certificate-', parameters('utcValue')), '2018-11-01').outputs.certificateThumbprint.value, '')]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('appServiceAllowedIPs')]"
+                        "value": "[parameters('backEndAccessRestrictions')]"
                     }
                 }
-            },
-            "dependsOn": [
-                "api-app-insights"
-            ]
+            }
         },
         {
             "condition": "[greater(length(parameters('apiCustomHostName')), 0)]",
             "apiVersion": "2017-08-01",
-            "name": "api-app-service-certificate",
+            "name": "[concat(variables('apiAppServiceName'),'-certificate-', parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -154,13 +153,11 @@
                         "value": "[resourceId(parameters('sharedAppServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('sharedBackendAppServicePlanName'))]"
                     }
                 }
-            },
-            "dependsOn": [
-            ]
+            }
         },
         {
             "apiVersion": "2017-08-01",
-            "name": "api-app-insights",
+            "name": "[concat('api-app-insights', '-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -176,9 +173,7 @@
                         "value": "[variables('apiAppServiceName')]"
                     }
                 }
-            },
-            "dependsOn": [
-            ]
+            }
         }
     ],
     "outputs": {
