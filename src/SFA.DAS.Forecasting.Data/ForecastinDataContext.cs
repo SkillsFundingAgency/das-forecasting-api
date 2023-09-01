@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Services.AppAuthentication;
+﻿using Azure.Core;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Forecasting.Data.Configuration;
@@ -23,7 +24,8 @@ namespace SFA.DAS.Forecasting.Data
         private readonly IDbConnection _connection;
 
         private readonly ForecastingConfiguration _configuration;
-        private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
+        private readonly DefaultAzureCredential _defaultAzureCredential;
+
         public ForecastingDataContext(DbContextOptions options) : base(options)
         {
         }
@@ -35,25 +37,29 @@ namespace SFA.DAS.Forecasting.Data
             _connection = connection;
         }
 
-        public ForecastingDataContext(IOptions<ForecastingConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) : base(options)
+        public ForecastingDataContext(IOptions<ForecastingConfiguration> config, DbContextOptions options, DefaultAzureCredential defaultAzureCredential) : base(options)
         {
             _configuration = config.Value;
-            _azureServiceTokenProvider = azureServiceTokenProvider;
+            _defaultAzureCredential = defaultAzureCredential;
         }       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
 
-            if (_configuration == null || _azureServiceTokenProvider == null)
+            if (_configuration == null ||  _defaultAzureCredential == null)
             {
                 return;
             }
 
+            var accessToken =  _defaultAzureCredential.GetToken(
+            new TokenRequestContext(scopes: new string[] { AzureResource + "/.default" }) { }
+            );
+
             var connection = new SqlConnection
             {
                 ConnectionString = _configuration.ConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
+                AccessToken = accessToken.ToString()
             };
 
             optionsBuilder.UseSqlServer(connection, options =>

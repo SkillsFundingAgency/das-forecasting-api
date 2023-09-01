@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,9 @@ namespace SFA.DAS.Forecasting.Api
 {
     public class Startup
     {
+        private readonly AzureActiveDirectoryConfiguration _azureAdConfig;
+        private readonly ForecastingConfiguration _forecastingConfiguration;
+
         public Startup(IConfiguration configuration)
         {
             var config = new ConfigurationBuilder()
@@ -34,8 +38,7 @@ namespace SFA.DAS.Forecasting.Api
                     configuration["AppName"].Split(","),
                     configuration["Environment"],
                     configuration["Version"]
-                ).Build();
-
+                ).Build();          
             Configuration = config;
         }
 
@@ -45,9 +48,11 @@ namespace SFA.DAS.Forecasting.Api
         {
             services.AddOptions();
             services.Configure<ForecastingConfiguration>(Configuration.GetSection("Forecasting"));
-            services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
+
+            services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+
 
             var serviceProvider = services.BuildServiceProvider();
             var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>();
@@ -101,12 +106,12 @@ namespace SFA.DAS.Forecasting.Api
                 }
 
 
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            });
 
             services.AddDatabaseRegistration(forecastingConfiguration.Value, Configuration["Environment"]);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -118,9 +123,11 @@ namespace SFA.DAS.Forecasting.Api
                 app.UseAuthentication();
             }
 
+            app.UseRouting();
+
             app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
