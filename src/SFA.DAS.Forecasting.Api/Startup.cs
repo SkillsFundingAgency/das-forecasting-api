@@ -19,14 +19,12 @@ using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 using System;
 using System.IO;
+using SFA.DAS.Forecasting.Data.Extensions;
 
 namespace SFA.DAS.Forecasting.Api
 {
     public class Startup
     {
-        private readonly AzureActiveDirectoryConfiguration _azureAdConfig;
-        private readonly ForecastingConfiguration _forecastingConfiguration;
-
         public Startup(IConfiguration configuration)
         {
             var config = new ConfigurationBuilder()
@@ -108,7 +106,8 @@ namespace SFA.DAS.Forecasting.Api
 
             });
 
-            services.AddDatabaseRegistration(forecastingConfiguration.Value, Configuration["Environment"]);
+            services.AddForecastingDataContext(forecastingConfiguration.Value.ToString(), Configuration["Environment"]);
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

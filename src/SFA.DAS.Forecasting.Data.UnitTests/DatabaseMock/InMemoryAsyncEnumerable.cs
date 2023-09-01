@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
 {
-    public class InMemoryAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+    public class InMemoryAsyncEnumerable<T> : EnumerableQuery<T>, IQueryable<T>
     {
         public InMemoryAsyncEnumerable(IEnumerable<T> enumerable)
             : base(enumerable)

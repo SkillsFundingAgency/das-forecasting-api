@@ -41,6 +41,20 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
                 this.disposed = true;
             }
         }
+        public async ValueTask<bool> MoveNextAsync()
+        {
+            return await Task.FromResult(this.innerEnumerator.MoveNext());
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (!this.disposed)
+            {               
+                // Dispose managed resources.
+                this.innerEnumerator.Dispose();               
+                this.disposed = true;
+            }
+        }
 
     }
 }

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
 {
@@ -41,15 +40,10 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
             return Task.FromResult(this.Execute(expression));
         }
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
+ 
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
-
-            return Task.FromResult(this.Execute<TResult>(expression)).ToAsyncEnumerable();
-        }
-
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(this.Execute<TResult>(expression));
+            return this.Execute<TResult>(expression);
         }
     }
 }

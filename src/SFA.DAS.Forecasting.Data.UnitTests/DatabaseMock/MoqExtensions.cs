@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.Language.Flow;
@@ -8,13 +9,15 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
 {
     public static class MoqExtensions
     {
-        public static IReturnsResult<IForecastingDataContext> ReturnsDbSet<TEntity>(this ISetup<IForecastingDataContext, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities) where TEntity : class
+        public static IReturnsResult<IForecastingDataContext> ReturnsDbSet<TEntity>(
+      this ISetup<IForecastingDataContext, DbSet<TEntity>> setupResult,
+      IEnumerable<TEntity> entities) where TEntity : class
         {
             var entitiesAsQueryable = entities.AsQueryable();
             var dbSetMock = new Mock<DbSet<TEntity>>();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-                .Setup(m => m.GetEnumerator())
+                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
                 .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()

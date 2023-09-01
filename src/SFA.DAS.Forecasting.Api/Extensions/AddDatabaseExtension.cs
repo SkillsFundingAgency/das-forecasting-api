@@ -1,4 +1,4 @@
-﻿using Azure.Identity;
+﻿using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Data;
@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Api.Extensions
             }
             else
             {
-                services.AddSingleton(new DefaultAzureCredential());
+                services.AddSingleton(new AzureServiceTokenProvider());
                 services.AddDbContext<ForecastingDataContext>(ServiceLifetime.Transient);
             }
 
