@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Data.Extensions
     {
         public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string connectionString, string environmentName)
         {
-            services.AddDbContext<ForecastingDataContext>((serviceProvider, options) =>
+            services.AddDbContext<IForecastingDataContext, ForecastingDataContext>((serviceProvider, options) =>
             {
                 var connection = new SqlConnection(connectionString);
 

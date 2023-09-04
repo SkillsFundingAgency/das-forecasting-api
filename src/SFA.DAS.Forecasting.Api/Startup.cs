@@ -91,7 +91,6 @@ namespace SFA.DAS.Forecasting.Api
                 typeof(GetAccountProjectionDetailValidator));
 
 
-            services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
             services.AddTransient<IAccountProjectionService, AccountProjectionService>();
 
             services.AddHealthChecks();
@@ -106,7 +105,7 @@ namespace SFA.DAS.Forecasting.Api
 
             });
 
-            services.AddForecastingDataContext(forecastingConfiguration.Value.ToString(), Configuration["Environment"]);
+            services.AddForecastingDataContext(forecastingConfiguration.Value.ConnectionString.ToString(), Configuration["Environment"]);
 
         }
 
