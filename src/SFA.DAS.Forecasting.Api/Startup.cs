@@ -81,10 +81,10 @@ namespace SFA.DAS.Forecasting.Api
                 services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
             }
 
-            services.AddMediatR(typeof(GetAccountExpiringFundsQueryHandler).Assembly);
+            services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(GetAccountExpiringFundsQueryHandler).Assembly));
             services.AddScoped(typeof(IValidator<GetAccountExpiringFundsQuery>), typeof(GetAccountExpiryValidator));
 
-            services.AddMediatR(typeof(GetAccountProjectionSummaryQuery).Assembly);
+            services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(GetAccountProjectionSummaryQuery).Assembly));
             services.AddScoped(typeof(IValidator<GetAccountProjectionSummaryQuery>),
                 typeof(GetAccountProjectionSummaryValidator));
             services.AddScoped(typeof(IValidator<GetAccountProjectionDetailQuery>),
