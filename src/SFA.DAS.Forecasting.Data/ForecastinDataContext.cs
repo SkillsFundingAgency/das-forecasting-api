@@ -2,28 +2,27 @@
 using SFA.DAS.Forecasting.Data.Configuration;
 
 
-namespace SFA.DAS.Forecasting.Data
-{
-    public interface IForecastingDataContext
-    {
-        DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
+namespace SFA.DAS.Forecasting.Data;
 
+public interface IForecastingDataContext
+{
+    DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
+
+}
+
+public partial class ForecastingDataContext : DbContext, IForecastingDataContext
+{
+
+    public DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
+
+    public ForecastingDataContext(DbContextOptions options) : base(options)
+    {
     }
 
-    public partial class ForecastingDataContext : DbContext, IForecastingDataContext
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new AccountProjection());
 
-        public DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
-
-        public ForecastingDataContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new AccountProjection());
-
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

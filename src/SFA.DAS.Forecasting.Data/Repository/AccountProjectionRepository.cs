@@ -5,25 +5,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Forecasting.Data.Repository
+namespace SFA.DAS.Forecasting.Data.Repository;
+
+public class AccountProjectionRepository : IAccountProjectionRepository
 {
-    public class AccountProjectionRepository : IAccountProjectionRepository
+    private readonly IForecastingDataContext _forecastingDataContext;
+
+    public AccountProjectionRepository(IForecastingDataContext forecastingDataContext)
     {
-        private readonly IForecastingDataContext _forecastingDataContext;
+        _forecastingDataContext = forecastingDataContext;
+    }
 
-        public AccountProjectionRepository(IForecastingDataContext forecastingDataContext)
-        {
-            _forecastingDataContext = forecastingDataContext;
-        }
+    public async Task<List<AccountProjection>> GetAccountProjectionByAccountId(long accountId)
+    {
+        var projections = await _forecastingDataContext
+            .AccountProjections
+            .Where(c => c.AccountId.Equals(accountId))
+            .ToListAsync();
 
-        public async Task<List<AccountProjection>> GetAccountProjectionByAccountId(long accountId)
-        {
-            var projections = await _forecastingDataContext
-                                    .AccountProjections
-                                    .Where(c => c.AccountId.Equals(accountId))
-                                    .ToListAsync();
-
-            return projections;
-        }
+        return projections;
     }
 }

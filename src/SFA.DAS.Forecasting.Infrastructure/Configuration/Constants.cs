@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.Forecasting.Infrastructure.Configuration
+﻿namespace SFA.DAS.Forecasting.Infrastructure.Configuration;
+
+public static class Constants
 {
-    public static class Constants
-    {
-        public const string ScopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
-        public const string ObjectIdClaimType = "http://schemas.microsoft.com/identity/claims/objectidentifier";
-    }
+    public const string ScopeClaimType = "http://schemas.microsoft.com/identity/claims/scope";
+    public const string ObjectIdClaimType = "http://schemas.microsoft.com/identity/claims/objectidentifier";
 }

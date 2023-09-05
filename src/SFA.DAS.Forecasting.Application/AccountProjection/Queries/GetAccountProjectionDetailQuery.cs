@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using System;
 
-namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
+namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+
+public class GetAccountProjectionDetailQuery : IRequest<GetAccountProjectionDetailQueryResult>
 {
-    public class GetAccountProjectionDetailQuery : IRequest<GetAccountProjectionDetailQueryResult>
-    {
-        public long AccountId { get; set; }
-        public int NumberOfMonths { get; set; }
-        public DateTime StartDate { get; set; }
-    }
+    public long AccountId { get; set; }
+    public int NumberOfMonths { get; set; }
+    public DateTime StartDate { get; set; }
 }

@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace SFA.DAS.Forecasting.Infrastructure.Configuration
+namespace SFA.DAS.Forecasting.Infrastructure.Configuration;
+
+public static class AzureTableStorageConfigurationExtensions
 {
-    public static class AzureTableStorageConfigurationExtensions
+    public static IConfigurationBuilder AddAzureTableStorageConfiguration(this IConfigurationBuilder builder, string connection, string[] appName, string environment, string version)
     {
-        public static IConfigurationBuilder AddAzureTableStorageConfiguration(this IConfigurationBuilder builder, string connection, string[] appName, string environment, string version)
-        {
-            return builder.Add(new AzureTableStorageConfigurationSource(connection, appName, environment, version));
-        }
+        return builder.Add(new AzureTableStorageConfigurationSource(connection, appName, environment, version));
     }
 }
