@@ -86,8 +86,8 @@ public class WhenGettingProjectionSummaryForAnAccount
     public async Task Then_The_Values_Are_Returned_In_The_Response()
     {
         //Arrange
-        decimal expectedFundsIn = 100.00M;
-        decimal expectedFundsOut = 999.99M;
+        const decimal expectedFundsIn = 100.00M;
+        const decimal expectedFundsOut = 999.99M;
         int expectedNumberOfmonths = 6;
         var startDate = DateTime.Today;
         var accountProjectionSummary = new AccountProjectionSummary(ExpectedAccountId, startDate, expectedNumberOfmonths, expectedFundsIn, expectedFundsOut);

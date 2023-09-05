@@ -10,7 +10,7 @@ public interface IForecastingDataContext
 
 }
 
-public partial class ForecastingDataContext : DbContext, IForecastingDataContext
+public class ForecastingDataContext : DbContext, IForecastingDataContext
 {
 
     public DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }

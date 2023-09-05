@@ -21,7 +21,7 @@ public class WhenGettingProjectionDetailForAnAccount
     private Mock<IAccountProjectionService> _service;
     private const long ExpectedAccountId = 553234;
     private const int NumberOfMonths = 12;
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
     private List<AccountProjectionDetail.ProjectionMonth> _expectedBreakdown;
     private DateTime ExpectedStartDate { get; set; }
 

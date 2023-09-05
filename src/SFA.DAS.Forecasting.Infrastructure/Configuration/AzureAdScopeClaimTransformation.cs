@@ -12,7 +12,7 @@ public class AzureAdScopeClaimTransformation : IClaimsTransformation
     public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
 
-        var scopeClaims = principal.FindAll((string)Constants.ScopeClaimType).ToList();
+        var scopeClaims = principal.FindAll(Constants.ScopeClaimType).ToList();
         if (scopeClaims.Count != 1 || !scopeClaims[0].Value.Contains(' '))
         {
             // Caller has no scopes or has multiple scopes (already split)

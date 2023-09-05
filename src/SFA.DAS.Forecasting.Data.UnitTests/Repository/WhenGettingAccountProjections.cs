@@ -18,17 +18,17 @@ public class WhenGettingAccountProjections
     {
         var accountProjections = new List<AccountProjection>
         {
-            new AccountProjection
+            new()
             {
                 AccountId = 1,
                 FutureFunds = 100
             },
-            new AccountProjection
+            new()
             {
                 AccountId = 1,
                 FutureFunds = 100
             },
-            new AccountProjection
+            new()
             {
                 AccountId = 2,
                 FutureFunds = 200
@@ -45,7 +45,7 @@ public class WhenGettingAccountProjections
     public async Task Then_The_Results_Are_Filtered_By_AccountId()
     {
         //Arrange
-        var accountId = 1;
+        const int accountId = 1;
 
         //Act
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);
@@ -59,7 +59,7 @@ public class WhenGettingAccountProjections
     public async Task Then_An_Empty_List_Is_Returned_When_There_Are_No_Records()
     {
         //Arrange
-        var accountId = 3;
+        const int accountId = 3;
 
         //Act
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);

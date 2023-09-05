@@ -9,7 +9,7 @@ public class GetAccountProjectionDetailQueryResult
     public long AccountId { get; set; }
     public DateTime ProjectionStartDate { get; set; }
     public int NumberOfMonths { get; set; }
-    public List<ProjectionMonth> Breakdown { get; set; } = new List<ProjectionMonth>();
+    public List<ProjectionMonth> Breakdown { get; set; } = new();
 
     public class ProjectionMonth
     {

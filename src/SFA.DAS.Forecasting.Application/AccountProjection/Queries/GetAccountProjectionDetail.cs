@@ -13,14 +13,12 @@ public class GetAccountProjectionDetailValidator : IValidator<GetAccountProjecti
             validationResult.AddError(nameof(item.AccountId));
         }
 
-        if (item.NumberOfMonths < 0)
+        switch (item.NumberOfMonths)
         {
-            validationResult.AddError(nameof(item.NumberOfMonths));
-        }
-
-        if (item.NumberOfMonths > 24)
-        {
-            validationResult.AddError(nameof(item.NumberOfMonths));
+            case < 0:
+            case > 24:
+                validationResult.AddError(nameof(item.NumberOfMonths));
+                break;
         }
 
         return Task.FromResult(validationResult);

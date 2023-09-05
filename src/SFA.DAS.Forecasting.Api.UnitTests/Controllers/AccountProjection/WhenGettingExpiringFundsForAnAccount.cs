@@ -73,8 +73,8 @@ public class WhenGettingExpiringFundsForAnAccount
     public async Task Then_If_A_Validation_Error_Occurs_A_Bad_Request_Is_Returned_With_Errors()
     {
         //Arrange
-        var expectedValidationMessage = "The following parameters have failed validation";
-        var expectedParam = "AccountId";
+        const string expectedValidationMessage = "The following parameters have failed validation";
+        const string expectedParam = "AccountId";
         _mediator.Setup(x => x.Send(It.IsAny<GetAccountExpiringFundsQuery>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new ArgumentException(expectedValidationMessage, expectedParam));
 

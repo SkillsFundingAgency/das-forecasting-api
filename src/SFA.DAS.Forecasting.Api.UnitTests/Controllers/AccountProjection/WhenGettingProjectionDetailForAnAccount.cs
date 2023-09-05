@@ -19,7 +19,7 @@ public class WhenGettingProjectionDetailForAnAccount
     private Mock<IMediator> _mediator;
     private GetAccountProjectionDetailQueryResult _queryResult;
 
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture = new();
 
     private const long ExpectedAccountId = 123234;
     private const int NumberOfMonths = 12;
@@ -76,8 +76,8 @@ public class WhenGettingProjectionDetailForAnAccount
     public async Task Then_If_A_Validation_Error_Occurs_A_Bad_Request_Is_Returned_With_Errors()
     {
         //Arrange
-        var expectedValidationMessage = "The following parameters have failed validation";
-        var expectedParam = "AccountId";
+        const string expectedValidationMessage = "The following parameters have failed validation";
+        const string expectedParam = "AccountId";
         _mediator.Setup(x => x.Send(It.IsAny<GetAccountProjectionDetailQuery>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new ArgumentException(expectedValidationMessage, expectedParam));
 

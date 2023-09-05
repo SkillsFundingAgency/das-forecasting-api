@@ -33,7 +33,7 @@ public class WhenGettingExpiringFundsForAnAccount
             new DateTime(2018, 01, 01),
             new List<ExpiryAmounts>
             {
-                new ExpiryAmounts(1, new DateTime(2019,01,01))
+                new(1, new DateTime(2019,01,01))
             });
         _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync(accountProjectionExpiry);
 
@@ -86,9 +86,9 @@ public class WhenGettingExpiringFundsForAnAccount
     public async Task Then_The_Values_Are_Returned_In_The_Response()
     {
         //Arrange
-        var expectedAmount = 100;
+        const int expectedAmount = 100;
         var expectedDate = new DateTime(2019, 02, 20);
-        var accountProjectionExpiry = new AccountProjectionExpiry(ExpectedAccountId, expectedDate, new List<ExpiryAmounts> { new ExpiryAmounts(expectedAmount, expectedDate) });
+        var accountProjectionExpiry = new AccountProjectionExpiry(ExpectedAccountId, expectedDate, new List<ExpiryAmounts> { new(expectedAmount, expectedDate) });
         _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync(accountProjectionExpiry);
 
         //Act

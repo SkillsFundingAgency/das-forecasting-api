@@ -39,11 +39,11 @@ public static class ServiceCollectionExtensions
 
     }
 
-    public static async Task<string> GenerateTokenAsync()
+    private static async Task<string> GenerateTokenAsync()
     {
-        const string AzureResource = "https://database.windows.net/";
+        const string azureResource = "https://database.windows.net/";
         var azureServiceTokenProvider = new AzureServiceTokenProvider();
-        var accessToken = await azureServiceTokenProvider.GetAccessTokenAsync(AzureResource);
+        var accessToken = await azureServiceTokenProvider.GetAccessTokenAsync(azureResource);
 
         return accessToken;
     }

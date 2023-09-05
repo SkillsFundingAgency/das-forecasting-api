@@ -15,7 +15,7 @@ public class WhenGettingProjectionDetailForAnAccount
     private AccountProjectionService _accountProjectionService;
     private List<Domain.Entities.AccountProjection> _expectedProjection;
     private const long ExpectedAccountId = 55437;
-    private readonly DateTime _expectedGenerationDate = new DateTime(2018, 10, 24);
+    private readonly DateTime _expectedGenerationDate = new(2018, 10, 24);
     private const decimal DefaultLevyFundsIn = 1;
     private const decimal DefaultTransferInCostOfTraining = 2;
     private const decimal DefaultTransferInCompletionPayments = 3;

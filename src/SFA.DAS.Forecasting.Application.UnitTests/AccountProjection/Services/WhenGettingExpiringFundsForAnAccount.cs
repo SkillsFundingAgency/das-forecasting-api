@@ -15,14 +15,14 @@ public class WhenGettingExpiringFundsForAnAccount
     private AccountProjectionService _accountProjectionService;
     private List<Domain.Entities.AccountProjection> _expectedProjection;
     private const long ExpectedAccountId = 55437;
-    private readonly DateTime _expectedGenerationDate = new DateTime(2018, 10, 24);
+    private readonly DateTime _expectedGenerationDate = new(2018, 10, 24);
 
     [SetUp]
     public void Arrange()
     {
         _expectedProjection = new List<Domain.Entities.AccountProjection>
         {
-            new Domain.Entities.AccountProjection
+            new()
             {
                 AccountId = ExpectedAccountId,
                 ExpiredFunds = 150.55m,
@@ -30,7 +30,7 @@ public class WhenGettingExpiringFundsForAnAccount
                 Year = 2018,
                 ProjectionCreationDate = _expectedGenerationDate
             },
-            new Domain.Entities.AccountProjection
+            new()
             {
                 AccountId = ExpectedAccountId,
                 ExpiredFunds = 0m,
@@ -38,7 +38,7 @@ public class WhenGettingExpiringFundsForAnAccount
                 Year = 2018,
                 ProjectionCreationDate = _expectedGenerationDate
             },
-            new Domain.Entities.AccountProjection
+            new()
             {
                 AccountId = ExpectedAccountId,
                 ExpiredFunds = 170.55m,
