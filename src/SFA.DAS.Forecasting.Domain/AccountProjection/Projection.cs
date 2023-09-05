@@ -1,12 +1,11 @@
-﻿namespace SFA.DAS.Forecasting.Domain.AccountProjection
-{
-    public class Projection
-    {
-        public long AccountId { get; }
+﻿namespace SFA.DAS.Forecasting.Domain.AccountProjection;
 
-        public Projection(long accountId)
-        {
-            AccountId = accountId;
-        }
+public class Projection
+{
+    public long AccountId { get; }
+
+    public Projection(long accountId)
+    {
+        AccountId = accountId;
     }
 }

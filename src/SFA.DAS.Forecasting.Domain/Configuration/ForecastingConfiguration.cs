@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.Forecasting.Domain.Configuration
+﻿namespace SFA.DAS.Forecasting.Domain.Configuration;
+
+public class ForecastingConfiguration
 {
-    public class ForecastingConfiguration
-    {
-        public string ConnectionString { get; set; }
-    }
+    public string ConnectionString { get; set; }
 }

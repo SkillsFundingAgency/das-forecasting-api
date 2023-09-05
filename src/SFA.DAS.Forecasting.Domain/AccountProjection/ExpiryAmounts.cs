@@ -1,17 +1,15 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Domain.AccountProjection
+namespace SFA.DAS.Forecasting.Domain.AccountProjection;
+
+public class ExpiryAmounts
 {
-    public class ExpiryAmounts
+    public decimal Amount { get; }
+    public DateTime PayrollDate { get; }
+
+    public ExpiryAmounts(decimal amount, DateTime payrollDate)
     {
-        public decimal Amount { get; }
-        public DateTime PayrollDate { get; }
-
-        public ExpiryAmounts(decimal amount, DateTime payrollDate)
-        {
-            Amount = amount;
-            PayrollDate = payrollDate;
-        }
-
+        Amount = amount;
+        PayrollDate = payrollDate;
     }
 }
