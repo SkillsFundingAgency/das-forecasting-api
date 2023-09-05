@@ -32,6 +32,6 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
         GetEnumerator();
 
         IQueryProvider IQueryable.Provider => new InMemoryAsyncQueryProvider<T>(this);
-    
+
     }
 }

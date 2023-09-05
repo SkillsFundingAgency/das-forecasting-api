@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
 {
@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         private AccountProjectionService _accountProjectionService;
         private List<Domain.Entities.AccountProjection> _expectedProjection;
         private const long ExpectedAccountId = 55437;
-        private readonly DateTime _expectedGenerationDate = new DateTime(2018,10,24);
+        private readonly DateTime _expectedGenerationDate = new DateTime(2018, 10, 24);
         private const decimal DefaultLevyFundsIn = 1;
         private const decimal DefaultTransferInCostOfTraining = 2;
         private const decimal DefaultTransferInCompletionPayments = 3;
@@ -32,9 +32,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         {
             _expectedProjection = new List<Domain.Entities.AccountProjection>();
 
-            for(int i= -1; i < 14; i++)
+            for (int i = -1; i < 14; i++)
             {
-                var startDate= _expectedGenerationDate.AddMonths(i);
+                var startDate = _expectedGenerationDate.AddMonths(i);
 
                 _expectedProjection.Add(
                      new Domain.Entities.AccountProjection
@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
             var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, 12);
 
             //Assert
-            _accountProjectionRepository.Verify(x=>x.GetAccountProjectionByAccountId(ExpectedAccountId));
+            _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
             Assert.IsNotNull(actual);
         }
 

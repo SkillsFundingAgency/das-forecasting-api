@@ -25,4 +25,4 @@ namespace SFA.DAS.Forecasting.Api.Extensions
             services.AddTransient(provider => new Lazy<ForecastingDataContext>(provider.GetService<ForecastingDataContext>()));
         }
     }
- }
+}

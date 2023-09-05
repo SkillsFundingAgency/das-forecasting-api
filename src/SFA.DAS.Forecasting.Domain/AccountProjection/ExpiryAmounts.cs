@@ -12,6 +12,6 @@ namespace SFA.DAS.Forecasting.Domain.AccountProjection
             Amount = amount;
             PayrollDate = payrollDate;
         }
-        
+
     }
 }

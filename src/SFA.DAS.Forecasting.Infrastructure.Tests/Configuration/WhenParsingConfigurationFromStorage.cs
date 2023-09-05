@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.Infrastructure.UnitTests.Configuration
 {

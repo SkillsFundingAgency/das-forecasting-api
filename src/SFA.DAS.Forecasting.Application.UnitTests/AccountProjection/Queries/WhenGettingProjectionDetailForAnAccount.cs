@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AutoFixture;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using NUnit.Framework;
-using Moq;
-using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
-using SFA.DAS.Forecasting.Domain.Validation;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
 using System.Threading.Tasks;
-using AutoFixture;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
 {
@@ -99,7 +99,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         {
             //Arrange
             const int expectedNumberOfMonths = 6;
-            
+
             var accountProjectionDetail = new AccountProjectionDetail
             {
                 AccountId = ExpectedAccountId,
@@ -125,7 +125,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         {
             //Arrange
             _service.Setup(x => x.GetProjectionDetail(ExpectedAccountId, ExpectedStartDate, 12)).ReturnsAsync((AccountProjectionDetail)null);
-            
+
             //Act
             var actual = await _handler.Handle(_query, _cancellationToken);
 

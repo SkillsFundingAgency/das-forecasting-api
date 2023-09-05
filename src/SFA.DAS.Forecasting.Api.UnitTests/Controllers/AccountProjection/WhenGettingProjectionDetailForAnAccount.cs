@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -10,6 +6,10 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Api.Controllers;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
 {
@@ -61,10 +61,10 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
             //Arrange
             _mediator.Setup(x => x.Send(It.Is<GetAccountProjectionDetailQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetAccountProjectionDetailQueryResult) null);
+                .ReturnsAsync((GetAccountProjectionDetailQueryResult)null);
 
             //Act
-            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate,NumberOfMonths);
+            var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate, NumberOfMonths);
 
             //Assert
             var result = actual as NotFoundResult;

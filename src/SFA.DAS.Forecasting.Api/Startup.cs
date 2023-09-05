@@ -1,25 +1,21 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using SFA.DAS.Forecasting.Api.Extensions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
-using SFA.DAS.Forecasting.Data.Repository;
+using SFA.DAS.Forecasting.Data.Extensions;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 using System;
 using System.IO;
-using SFA.DAS.Forecasting.Data.Extensions;
 
 namespace SFA.DAS.Forecasting.Api
 {
@@ -36,7 +32,7 @@ namespace SFA.DAS.Forecasting.Api
                     configuration["AppName"].Split(","),
                     configuration["Environment"],
                     configuration["Version"]
-                ).Build();          
+                ).Build();
             Configuration = config;
         }
 

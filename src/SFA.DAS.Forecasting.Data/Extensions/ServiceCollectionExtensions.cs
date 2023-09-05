@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
-using Microsoft.Azure.Services.AppAuthentication;
+﻿using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
+using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Data.Repository;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Data.Extensions
 {
@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Data.Extensions
         private static void RegisterServices(IServiceCollection services)
         {
             services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
-        
+
         }
 
         public static async Task<string> GenerateTokenAsync()

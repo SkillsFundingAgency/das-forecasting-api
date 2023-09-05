@@ -1,9 +1,8 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
 {

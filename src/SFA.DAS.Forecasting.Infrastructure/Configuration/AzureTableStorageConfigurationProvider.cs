@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using SFA.DAS.Forecasting.Domain.Configuration;
+using System.Linq;
 
 namespace SFA.DAS.Forecasting.Infrastructure.Configuration
 {

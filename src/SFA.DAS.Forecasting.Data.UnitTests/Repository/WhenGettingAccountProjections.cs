@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Data.Repository;
 using SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Forecasting.Domain.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Data.UnitTests.Repository
 {

@@ -5,7 +5,7 @@ namespace SFA.DAS.Forecasting.Domain.AccountProjection
 {
     public class AccountProjectionExpiry
     {
-        public long AccountId { get;}
+        public long AccountId { get; }
         public DateTime ProjectionGenerationDate { get; }
         public List<ExpiryAmounts> ExpiryAmounts { get; }
 

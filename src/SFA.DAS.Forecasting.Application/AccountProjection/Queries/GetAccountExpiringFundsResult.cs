@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
 using System.Collections.Generic;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
 {

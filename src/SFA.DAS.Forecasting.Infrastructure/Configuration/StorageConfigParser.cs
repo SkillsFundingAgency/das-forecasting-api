@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using SFA.DAS.Forecasting.Domain.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Forecasting.Infrastructure.Configuration
 {

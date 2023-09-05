@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
 {

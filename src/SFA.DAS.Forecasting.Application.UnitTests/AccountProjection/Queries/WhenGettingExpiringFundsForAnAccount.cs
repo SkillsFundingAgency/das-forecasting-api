@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Moq;
+using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Validation;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework;
-using Moq;
-using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
-using SFA.DAS.Forecasting.Domain.Validation;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
@@ -29,8 +29,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             _cancellationToken = new CancellationToken();
             _service = new Mock<IAccountProjectionService>();
             var accountProjectionExpiry = new AccountProjectionExpiry(
-                ExpectedAccountId, 
-                new DateTime(2018,01,01), 
+                ExpectedAccountId,
+                new DateTime(2018, 01, 01),
                 new List<ExpiryAmounts>
                 {
                     new ExpiryAmounts(1, new DateTime(2019,01,01))
@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             //Arrange
             var expectedAmount = 100;
             var expectedDate = new DateTime(2019, 02, 20);
-            var accountProjectionExpiry = new AccountProjectionExpiry(ExpectedAccountId, expectedDate, new List<ExpiryAmounts>{new ExpiryAmounts(expectedAmount,expectedDate)});
+            var accountProjectionExpiry = new AccountProjectionExpiry(ExpectedAccountId, expectedDate, new List<ExpiryAmounts> { new ExpiryAmounts(expectedAmount, expectedDate) });
             _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync(accountProjectionExpiry);
 
             //Act
@@ -106,7 +106,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         {
             //Arrange
             _service.Setup(x => x.GetExpiringFunds(ExpectedAccountId)).ReturnsAsync((AccountProjectionExpiry)null);
-            
+
             //Act
             var actual = await _handler.Handle(_query, _cancellationToken);
 

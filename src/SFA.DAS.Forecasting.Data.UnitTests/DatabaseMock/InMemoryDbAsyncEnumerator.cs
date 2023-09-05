@@ -49,9 +49,9 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
         public async ValueTask DisposeAsync()
         {
             if (!this.disposed)
-            {               
+            {
                 // Dispose managed resources.
-                this.innerEnumerator.Dispose();               
+                this.innerEnumerator.Dispose();
                 this.disposed = true;
             }
         }

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Domain.Validation;
+﻿using SFA.DAS.Forecasting.Domain.Validation;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
 {
@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
                 validationResult.AddError(nameof(item.NumberOfMonths));
             }
 
-            if (item.NumberOfMonths > 24 )
+            if (item.NumberOfMonths > 24)
             {
                 validationResult.AddError(nameof(item.NumberOfMonths));
             }

@@ -7,7 +7,7 @@ namespace SFA.DAS.Forecasting.Data
     public interface IForecastingDataContext
     {
         DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
-        
+
     }
 
     public partial class ForecastingDataContext : DbContext, IForecastingDataContext
@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Data
         public ForecastingDataContext(DbContextOptions options) : base(options)
         {
         }
-      
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AccountProjection());

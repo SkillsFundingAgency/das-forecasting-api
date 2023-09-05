@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Moq;
+using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Validation;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework;
-using Moq;
-using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
-using SFA.DAS.Forecasting.Domain.Validation;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
             _cancellationToken = new CancellationToken();
             _service = new Mock<IAccountProjectionService>();
             var accountProjectionSummary = new AccountProjectionSummary(
-                ExpectedAccountId, 
+                ExpectedAccountId,
                 DateTime.Today,
                 12,
                 123.56M,
@@ -110,7 +110,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries
         {
             //Arrange
             _service.Setup(x => x.GetProjectionSummary(ExpectedAccountId, DateTime.Today, 12)).ReturnsAsync((AccountProjectionSummary)null);
-            
+
             //Act
             var actual = await _handler.Handle(_query, _cancellationToken);
 

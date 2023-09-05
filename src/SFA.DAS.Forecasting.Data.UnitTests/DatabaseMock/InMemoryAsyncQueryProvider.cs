@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
 {
@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
             return Task.FromResult(this.Execute(expression));
         }
 
- 
+
         public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             return this.Execute<TResult>(expression);

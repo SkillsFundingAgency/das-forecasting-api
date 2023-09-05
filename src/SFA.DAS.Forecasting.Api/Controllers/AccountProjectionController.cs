@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Api.Controllers
 {
@@ -84,7 +84,7 @@ namespace SFA.DAS.Forecasting.Api.Controllers
                     StartDate = startDate,
                     NumberOfMonths = numberOfMonths
                 };
-                
+
                 var response = await _mediator.Send(query);
 
                 if (response == null)

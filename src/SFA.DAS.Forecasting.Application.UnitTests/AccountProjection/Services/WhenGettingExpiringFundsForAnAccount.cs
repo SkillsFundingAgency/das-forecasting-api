@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
 {
@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
         private AccountProjectionService _accountProjectionService;
         private List<Domain.Entities.AccountProjection> _expectedProjection;
         private const long ExpectedAccountId = 55437;
-        private readonly DateTime _expectedGenerationDate = new DateTime(2018,10,24);
+        private readonly DateTime _expectedGenerationDate = new DateTime(2018, 10, 24);
 
         [SetUp]
         public void Arrange()
@@ -63,7 +63,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
             var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
             //Assert
-            _accountProjectionRepository.Verify(x=>x.GetAccountProjectionByAccountId(ExpectedAccountId));
+            _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
             Assert.IsNotNull(actual);
         }
 
@@ -89,12 +89,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
             var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
             //Assert
-            Assert.AreEqual(ExpectedAccountId,actual.AccountId);
-            Assert.AreEqual(_expectedGenerationDate,actual.ProjectionGenerationDate);
+            Assert.AreEqual(ExpectedAccountId, actual.AccountId);
+            Assert.AreEqual(_expectedGenerationDate, actual.ProjectionGenerationDate);
             var expiryAmounts = actual.ExpiryAmounts.LastOrDefault();
             Assert.IsNotNull(expiryAmounts);
-            Assert.AreEqual(_expectedProjection[0].ExpiredFunds,expiryAmounts.Amount);
-            Assert.AreEqual(new DateTime(_expectedProjection[0].Year,_expectedProjection[0].Month,23), expiryAmounts.PayrollDate);
+            Assert.AreEqual(_expectedProjection[0].ExpiredFunds, expiryAmounts.Amount);
+            Assert.AreEqual(new DateTime(_expectedProjection[0].Year, _expectedProjection[0].Month, 23), expiryAmounts.PayrollDate);
         }
 
         [Test]

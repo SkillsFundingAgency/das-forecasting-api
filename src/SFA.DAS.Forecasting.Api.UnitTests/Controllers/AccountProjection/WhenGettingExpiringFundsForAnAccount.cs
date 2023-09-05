@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -11,6 +6,11 @@ using SFA.DAS.Forecasting.Api.Controllers;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
         public void Arrange()
         {
             _mediator = new Mock<IMediator>();
-            _accountExpiryResult = new GetAccountExpiringFundsResult {AccountId = ExpectedAccountId,ExpiryAmounts = new List<ExpiryAmounts>(),ProjectionGenerationDate = DateTime.UtcNow};
+            _accountExpiryResult = new GetAccountExpiringFundsResult { AccountId = ExpectedAccountId, ExpiryAmounts = new List<ExpiryAmounts>(), ProjectionGenerationDate = DateTime.UtcNow };
 
             _mediator.Setup(x => x.Send(It.Is<GetAccountExpiringFundsQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                     It.IsAny<CancellationToken>()))
@@ -58,7 +58,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
             //Arrange
             _mediator.Setup(x => x.Send(It.Is<GetAccountExpiringFundsQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetAccountExpiringFundsResult) null);
+                .ReturnsAsync((GetAccountExpiringFundsResult)null);
 
             //Act
             var actual = await _accountProjectionController.GetAccountExpiredFunds(ExpectedAccountId);

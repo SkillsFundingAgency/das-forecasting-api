@@ -1,14 +1,14 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Api.Controllers;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
 {
@@ -26,7 +26,8 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
         public void Arrange()
         {
             _mediator = new Mock<IMediator>();
-            _accountSummaryResult = new GetAccountProjectionSummaryResult {
+            _accountSummaryResult = new GetAccountProjectionSummaryResult
+            {
                 AccountId = ExpectedAccountId,
                 FundsIn = ExpectedFundsIn,
                 FundsOut = ExpectedFundsOut,
@@ -64,7 +65,7 @@ namespace SFA.DAS.Forecasting.Api.UnitTests.Controllers.AccountProjection
             //Arrange
             _mediator.Setup(x => x.Send(It.Is<GetAccountProjectionSummaryQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetAccountProjectionSummaryResult) null);
+                .ReturnsAsync((GetAccountProjectionSummaryResult)null);
 
             //Act
             var actual = await _accountProjectionController.GetProjectedFundingSummary(ExpectedAccountId, NumberOfMonths);

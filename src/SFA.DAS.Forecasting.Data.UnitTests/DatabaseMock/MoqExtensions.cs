@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.Language.Flow;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
 {
