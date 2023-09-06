@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Forecasting.Domain.Validation;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 

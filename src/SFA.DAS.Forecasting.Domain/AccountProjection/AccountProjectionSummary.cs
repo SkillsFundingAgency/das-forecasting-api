@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Forecasting.Domain.AccountProjection;
+﻿namespace SFA.DAS.Forecasting.Domain.AccountProjection;
 
 public class AccountProjectionSummary
 {

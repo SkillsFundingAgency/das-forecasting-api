@@ -1,10 +1,6 @@
 ﻿using MediatR;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Validation;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 

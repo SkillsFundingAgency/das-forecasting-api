@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+﻿namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 
 public class GetAccountProjectionSummaryResult
 {

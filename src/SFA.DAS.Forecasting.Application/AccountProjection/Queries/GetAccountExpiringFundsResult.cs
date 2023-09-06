@@ -1,6 +1,4 @@
 ﻿using SFA.DAS.Forecasting.Domain.AccountProjection;
-using System;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace SFA.DAS.Forecasting.Domain.Validation;
+﻿namespace SFA.DAS.Forecasting.Domain.Validation;
 
 public interface IValidator<in T>
 {

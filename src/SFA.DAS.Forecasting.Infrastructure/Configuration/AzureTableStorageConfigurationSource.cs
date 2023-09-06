@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace SFA.DAS.Forecasting.Infrastructure.Configuration;
+﻿namespace SFA.DAS.Forecasting.Infrastructure.Configuration;
 
 public class AzureTableStorageConfigurationSource : IConfigurationSource
 {

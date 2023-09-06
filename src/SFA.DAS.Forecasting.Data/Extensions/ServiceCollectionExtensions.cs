@@ -1,11 +1,8 @@
 ﻿using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Data.Repository;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Data.Extensions;
 

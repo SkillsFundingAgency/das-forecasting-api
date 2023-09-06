@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Api.Controllers;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Forecasting.Data.Configuration;
+﻿using SFA.DAS.Forecasting.Data.Configuration;
 
 
 namespace SFA.DAS.Forecasting.Data;

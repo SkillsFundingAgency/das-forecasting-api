@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 

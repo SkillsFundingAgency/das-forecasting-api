@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
+﻿namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
 
 public class InMemoryDbAsyncEnumerator<T> : IAsyncEnumerator<T>
 {

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Configuration;
-using System;
 
 namespace SFA.DAS.Forecasting.Api.Extensions;
 

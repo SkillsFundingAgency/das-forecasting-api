@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SFA.DAS.Forecasting.Domain.AccountProjection;
+﻿namespace SFA.DAS.Forecasting.Domain.AccountProjection;
 
 public class AccountProjectionExpiry
 {

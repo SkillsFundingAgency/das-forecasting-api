@@ -1,10 +1,5 @@
-﻿using Moq;
-using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.AccountProjection.Services;
+﻿using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services;
 

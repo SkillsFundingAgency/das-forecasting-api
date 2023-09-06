@@ -14,7 +14,6 @@ using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
-using System;
 using System.IO;
 
 namespace SFA.DAS.Forecasting.Api;
