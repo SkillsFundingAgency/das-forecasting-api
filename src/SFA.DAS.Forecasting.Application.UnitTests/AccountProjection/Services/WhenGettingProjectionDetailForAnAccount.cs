@@ -1,181 +1,174 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.AccountProjection.Services;
+﻿using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 
-namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services
+namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services;
+
+public class WhenGettingProjectionDetailForAnAccount
 {
-    public class WhenGettingProjectionDetailForAnAccount
+    private Mock<IAccountProjectionRepository> _accountProjectionRepository;
+    private AccountProjectionService _accountProjectionService;
+    private List<Domain.Entities.AccountProjection> _expectedProjection;
+    private const long ExpectedAccountId = 55437;
+    private readonly DateTime _expectedGenerationDate = new(2018, 10, 24);
+    private const decimal DefaultLevyFundsIn = 1;
+    private const decimal DefaultTransferInCostOfTraining = 2;
+    private const decimal DefaultTransferInCompletionPayments = 3;
+    private const decimal DefaultLevyFundedCostOfTraining = 1;
+    private const decimal DefaultTransferOutCostOfTraining = 2;
+    private const decimal DefaultLevyFundedCompletionPayments = 3;
+    private const decimal DefaultTransferOutCompletionPayments = 4;
+    private const decimal DefaultApprovedPledgeApplicationCost = 5;
+    private const decimal DefaultAcceptedPledgeApplicationCost = 6;
+    private const decimal DefaultPledgeOriginatedCommitmentCost = 7;
+
+    [SetUp]
+    public void Arrange()
     {
-        private Mock<IAccountProjectionRepository> _accountProjectionRepository;
-        private AccountProjectionService _accountProjectionService;
-        private List<Domain.Entities.AccountProjection> _expectedProjection;
-        private const long ExpectedAccountId = 55437;
-        private readonly DateTime _expectedGenerationDate = new DateTime(2018,10,24);
-        private const decimal DefaultLevyFundsIn = 1;
-        private const decimal DefaultTransferInCostOfTraining = 2;
-        private const decimal DefaultTransferInCompletionPayments = 3;
-        private const decimal DefaultLevyFundedCostOfTraining = 1;
-        private const decimal DefaultTransferOutCostOfTraining = 2;
-        private const decimal DefaultLevyFundedCompletionPayments = 3;
-        private const decimal DefaultTransferOutCompletionPayments = 4;
-        private const decimal DefaultApprovedPledgeApplicationCost = 5;
-        private const decimal DefaultAcceptedPledgeApplicationCost = 6;
-        private const decimal DefaultPledgeOriginatedCommitmentCost = 7;
+        _expectedProjection = new List<Domain.Entities.AccountProjection>();
 
-        [SetUp]
-        public void Arrange()
+        for (int i = -1; i < 14; i++)
         {
-            _expectedProjection = new List<Domain.Entities.AccountProjection>();
+            var startDate = _expectedGenerationDate.AddMonths(i);
 
-            for(int i= -1; i < 14; i++)
-            {
-                var startDate= _expectedGenerationDate.AddMonths(i);
-
-                _expectedProjection.Add(
-                     new Domain.Entities.AccountProjection
-                     {
-                         AccountId = ExpectedAccountId,
-                         ExpiredFunds = 150.55m,
-                         Month = (short)startDate.Month,
-                         Year = startDate.Year,
-                         ProjectionCreationDate = _expectedGenerationDate,
-                         LevyFundsIn = DefaultLevyFundsIn,
-                         TransferInCostOfTraining = DefaultTransferInCostOfTraining,
-                         TransferInCompletionPayments = DefaultTransferInCompletionPayments,
-                         LevyFundedCostOfTraining = DefaultLevyFundedCostOfTraining,
-                         TransferOutCostOfTraining = DefaultTransferOutCostOfTraining,
-                         LevyFundedCompletionPayments = DefaultLevyFundedCompletionPayments,
-                         TransferOutCompletionPayments = DefaultTransferOutCompletionPayments,
-                         ApprovedPledgeApplicationCost = DefaultApprovedPledgeApplicationCost,
-                         AcceptedPledgeApplicationCost = DefaultAcceptedPledgeApplicationCost,
-                         PledgeOriginatedCommitmentCost = DefaultPledgeOriginatedCommitmentCost
-                     }
-                    );
-            }
-
-            _accountProjectionRepository = new Mock<IAccountProjectionRepository>();
-            _accountProjectionRepository
-                .Setup(x => x.GetAccountProjectionByAccountId(ExpectedAccountId))
-                .ReturnsAsync(_expectedProjection);
-
-            _accountProjectionService = new AccountProjectionService(_accountProjectionRepository.Object);
+            _expectedProjection.Add(
+                new Domain.Entities.AccountProjection
+                {
+                    AccountId = ExpectedAccountId,
+                    ExpiredFunds = 150.55m,
+                    Month = (short)startDate.Month,
+                    Year = startDate.Year,
+                    ProjectionCreationDate = _expectedGenerationDate,
+                    LevyFundsIn = DefaultLevyFundsIn,
+                    TransferInCostOfTraining = DefaultTransferInCostOfTraining,
+                    TransferInCompletionPayments = DefaultTransferInCompletionPayments,
+                    LevyFundedCostOfTraining = DefaultLevyFundedCostOfTraining,
+                    TransferOutCostOfTraining = DefaultTransferOutCostOfTraining,
+                    LevyFundedCompletionPayments = DefaultLevyFundedCompletionPayments,
+                    TransferOutCompletionPayments = DefaultTransferOutCompletionPayments,
+                    ApprovedPledgeApplicationCost = DefaultApprovedPledgeApplicationCost,
+                    AcceptedPledgeApplicationCost = DefaultAcceptedPledgeApplicationCost,
+                    PledgeOriginatedCommitmentCost = DefaultPledgeOriginatedCommitmentCost
+                }
+            );
         }
 
-        [Test]
-        public async Task Then_The_Projections_Are_Taken_From_The_Repository_For_The_Account()
-        {
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, 12);
+        _accountProjectionRepository = new Mock<IAccountProjectionRepository>();
+        _accountProjectionRepository
+            .Setup(x => x.GetAccountProjectionByAccountId(ExpectedAccountId))
+            .ReturnsAsync(_expectedProjection);
 
-            //Assert
-            _accountProjectionRepository.Verify(x=>x.GetAccountProjectionByAccountId(ExpectedAccountId));
-            Assert.IsNotNull(actual);
-        }
+        _accountProjectionService = new AccountProjectionService(_accountProjectionRepository.Object);
+    }
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsIn_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expectedFundsIn = (DefaultLevyFundsIn) * numberOfMonths;
+    [Test]
+    public async Task Then_The_Projections_Are_Taken_From_The_Repository_For_The_Account()
+    {
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, 12);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
+        Assert.IsNotNull(actual);
+    }
 
-            //Assert
-            Assert.AreEqual(expectedFundsIn, actual.Breakdown.Sum(x => x.FundsIn));
-        }
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsIn_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expectedFundsIn = (DefaultLevyFundsIn) * numberOfMonths;
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsOut_Commitments_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expected = (DefaultLevyFundedCostOfTraining + DefaultLevyFundedCompletionPayments) * numberOfMonths;
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        Assert.AreEqual(expectedFundsIn, actual.Breakdown.Sum(x => x.FundsIn));
+    }
 
-            //Assert
-            Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.Commitments));
-        }
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsOut_Commitments_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expected = (DefaultLevyFundedCostOfTraining + DefaultLevyFundedCompletionPayments) * numberOfMonths;
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsOut_ApprovedPledgeApplications_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expected = DefaultApprovedPledgeApplicationCost * numberOfMonths;
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.Commitments));
+    }
 
-            //Assert
-            Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.ApprovedPledgeApplications));
-        }
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsOut_ApprovedPledgeApplications_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expected = DefaultApprovedPledgeApplicationCost * numberOfMonths;
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsOut_AcceptedPledgeApplications_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expected = DefaultAcceptedPledgeApplicationCost * numberOfMonths;
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.ApprovedPledgeApplications));
+    }
 
-            //Assert
-            Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.AcceptedPledgeApplications));
-        }
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsOut_AcceptedPledgeApplications_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expected = DefaultAcceptedPledgeApplicationCost * numberOfMonths;
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsOut_PledgeOriginatedCommitments_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expected = DefaultPledgeOriginatedCommitmentCost * numberOfMonths;
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.AcceptedPledgeApplications));
+    }
 
-            //Assert
-            Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.PledgeOriginatedCommitments));
-        }
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsOut_PledgeOriginatedCommitments_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expected = DefaultPledgeOriginatedCommitmentCost * numberOfMonths;
 
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(6)]
-        [TestCase(12)]
-        public async Task Then_The_FundsOut_TransferConnections_Projections_Are_Correct_For_The_Account(int numberOfMonths)
-        {
-            // arrange
-            var expected = (DefaultTransferOutCompletionPayments + DefaultTransferOutCostOfTraining - DefaultApprovedPledgeApplicationCost - DefaultAcceptedPledgeApplicationCost - DefaultPledgeOriginatedCommitmentCost) * numberOfMonths;
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
-            //Act
-            var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+        //Assert
+        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.PledgeOriginatedCommitments));
+    }
 
-            //Assert
-            Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.TransferConnections));
-        }
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(6)]
+    [TestCase(12)]
+    public async Task Then_The_FundsOut_TransferConnections_Projections_Are_Correct_For_The_Account(int numberOfMonths)
+    {
+        // arrange
+        var expected = (DefaultTransferOutCompletionPayments + DefaultTransferOutCostOfTraining - DefaultApprovedPledgeApplicationCost - DefaultAcceptedPledgeApplicationCost - DefaultPledgeOriginatedCommitmentCost) * numberOfMonths;
+
+        //Act
+        var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
+
+        //Assert
+        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.TransferConnections));
     }
 }

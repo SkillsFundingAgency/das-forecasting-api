@@ -1,29 +1,25 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Domain.Validation;
+﻿using SFA.DAS.Forecasting.Domain.Validation;
 
-namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries
+namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+
+public class GetAccountProjectionDetailValidator : IValidator<GetAccountProjectionDetailQuery>
 {
-    public class GetAccountProjectionDetailValidator : IValidator<GetAccountProjectionDetailQuery>
+    public Task<ValidationResult> ValidateAsync(GetAccountProjectionDetailQuery item)
     {
-        public Task<ValidationResult> ValidateAsync(GetAccountProjectionDetailQuery item)
+        var validationResult = new ValidationResult();
+        if (item.AccountId == 0)
         {
-            var validationResult = new ValidationResult();
-            if (item.AccountId == 0)
-            {
-                validationResult.AddError(nameof(item.AccountId));
-            }
-
-            if (item.NumberOfMonths < 0)
-            {
-                validationResult.AddError(nameof(item.NumberOfMonths));
-            }
-
-            if (item.NumberOfMonths > 24 )
-            {
-                validationResult.AddError(nameof(item.NumberOfMonths));
-            }
-
-            return Task.FromResult(validationResult);
+            validationResult.AddError(nameof(item.AccountId));
         }
+
+        switch (item.NumberOfMonths)
+        {
+            case < 0:
+            case > 24:
+                validationResult.AddError(nameof(item.NumberOfMonths));
+                break;
+        }
+
+        return Task.FromResult(validationResult);
     }
 }
