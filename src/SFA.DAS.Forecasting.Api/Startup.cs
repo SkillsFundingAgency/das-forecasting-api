@@ -15,6 +15,8 @@ using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace SFA.DAS.Forecasting.Api;
 
@@ -40,6 +42,12 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
+        
+        services.AddLogging(builder =>
+        {
+            builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+            builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+        });
         services.Configure<ForecastingConfiguration>(Configuration.GetSection("Forecasting"));
         services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
 
