@@ -64,7 +64,8 @@ public class WhenGettingProjectionDetailForAnAccount
             .ReturnsAsync(new ValidationResult { ValidationDictionary = new Dictionary<string, string> { { "", "" } } });
 
         //Act Assert
-        Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(_query, _cancellationToken));
+        var action =  () =>  _handler.Handle(_query, _cancellationToken);
+        action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]

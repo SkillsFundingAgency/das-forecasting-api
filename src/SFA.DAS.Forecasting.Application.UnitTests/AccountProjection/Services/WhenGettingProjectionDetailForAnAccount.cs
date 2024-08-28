@@ -69,7 +69,7 @@ public class WhenGettingProjectionDetailForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.That(actual, Is.Not.Null);
+        actual.Should().NotBeNull();
     }
 
     [TestCase(0)]
