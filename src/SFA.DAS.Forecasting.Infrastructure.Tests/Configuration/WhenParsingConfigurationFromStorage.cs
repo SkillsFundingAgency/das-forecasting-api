@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.Infrastructure.UnitTests.Configuration;
 
@@ -22,9 +22,11 @@ public class WhenParsingConfigurationFromStorage
         //Arrange
         var configItem = new ConfigurationItem { Data = "{" };
 
-        //Act Assert
-        Assert.Throws<JsonReaderException>(() => _storageConfigParser.ParseConfig(configItem, ""));
-
+        //Act 
+        var action = () => _storageConfigParser.ParseConfig(configItem, "");
+        
+        //Assert
+        action.Should().Throw<JsonReaderException>();
     }
 
     [Test]
@@ -37,7 +39,7 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "");
 
         //Assert
-        Assert.That(actual, Is.Not.Null);
+        actual.Should().NotBeNull();
     }
 
     [Test]
@@ -50,9 +52,9 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "");
 
         //Assert
-        Assert.That(actual, Is.Not.Null);
-        Assert.That(actual, Is.Not.Empty);
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item1", "Value1")));
+        actual.Should().NotBeNull();
+        actual.Should().NotBeEmpty();
+        actual.Should().ContainKey("Configuration:Item1").WhoseValue.Should().Be("Value1");
     }
 
     [Test]
@@ -65,10 +67,10 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "Section");
 
         //Assert
-        Assert.That(actual, Is.Not.Null);
-        Assert.That(actual, Is.Not.Empty);
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item1", "Value1")));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item2", "Value2")));
+        actual.Should().NotBeNull();
+        actual.Should().NotBeEmpty();
+        actual.Should().ContainKey("Section:Item1").WhoseValue.Should().Be("Value1");
+        actual.Should().ContainKey("Section:Item2").WhoseValue.Should().Be("Value2");
     }
 
     [Test]
@@ -81,13 +83,15 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "Section");
 
         //Assert
-        Assert.That(actual, Is.Not.Null);
-        Assert.That(actual, Is.Not.Empty);
-        Assert.That(actual.Count, Is.EqualTo(5));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item1", "Value1")));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item2", "Value2")));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration2:Item3", "Value3")));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item1", "Value1")));
-        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item2", "Value2")));
+        actual.Should().NotBeNull();
+        actual.Should().NotBeEmpty();
+        actual.Count.Should().Be(5);
+        
+        actual.Should().ContainKey("Configuration:Item1").WhoseValue.Should().Be("Value1");
+        actual.Should().ContainKey("Configuration:Item2").WhoseValue.Should().Be("Value2");
+        actual.Should().ContainKey("Configuration2:Item3").WhoseValue.Should().Be("Value3");
+
+        actual.Should().ContainKey("Section:Item1").WhoseValue.Should().Be("Value1");
+        actual.Should().ContainKey("Section:Item2").WhoseValue.Should().Be("Value2");
     }
 }
