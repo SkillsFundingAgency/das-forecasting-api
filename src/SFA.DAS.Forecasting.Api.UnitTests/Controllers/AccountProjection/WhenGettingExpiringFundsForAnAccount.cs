@@ -51,7 +51,7 @@ public class WhenGettingExpiringFundsForAnAccount
         //Arrange
         _mediator.Setup(expression: x => x.Send(It.Is<GetAccountExpiringFundsQuery>(c => c.AccountId.Equals(ExpectedAccountId)),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(value: (GetAccountExpiringFundsResult)null);
+            .ReturnsAsync(value: null);
 
         //Act
         var actual = await _accountProjectionController.GetAccountExpiredFunds(accountId: ExpectedAccountId);
