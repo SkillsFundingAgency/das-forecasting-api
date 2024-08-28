@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Validation;
 
@@ -63,7 +64,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.AssignableFrom<GetAccountExpiringFundsResult>());
+        actual.Should().BeAssignableTo<GetAccountExpiringFundsResult>();
     }
 
     [Test]
@@ -89,10 +90,10 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual.ExpiryAmounts, Is.Not.Null);
-        Assert.That(actual.ExpiryAmounts[0].Amount, Is.EqualTo(expectedAmount));
-        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
-        Assert.That(actual.ProjectionGenerationDate, Is.EqualTo(expectedDate));
+        actual.ExpiryAmounts.Should().NotBeNull();
+        actual.ExpiryAmounts[0].Amount.Should().Be(expectedAmount);
+        actual.AccountId.Should().Be(ExpectedAccountId);
+        actual.ProjectionGenerationDate.Should().Be(expectedDate);
     }
 
     [Test]
@@ -105,6 +106,6 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.Null);
+        actual.Should().BeNull();
     }
 }

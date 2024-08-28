@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Validation;
 
@@ -23,12 +24,14 @@ public class WhenGettingProjectionSummaryForAnAccount
             .ReturnsAsync(new ValidationResult { ValidationDictionary = new Dictionary<string, string>() });
         _cancellationToken = new CancellationToken();
         _service = new Mock<IAccountProjectionService>();
+        
         var accountProjectionSummary = new AccountProjectionSummary(
             ExpectedAccountId,
             DateTime.Today,
             12,
             123.56M,
             654.32M);
+        
         _service.Setup(x => x.GetProjectionSummary(ExpectedAccountId, DateTime.Today, 12)).ReturnsAsync(accountProjectionSummary);
 
         _handler = new GetAccountProjectionSummaryQueryHandler(_validator.Object, _service.Object);
@@ -52,8 +55,11 @@ public class WhenGettingProjectionSummaryForAnAccount
         _validator.Setup(x => x.ValidateAsync(It.IsAny<GetAccountProjectionSummaryQuery>()))
             .ReturnsAsync(new ValidationResult { ValidationDictionary = new Dictionary<string, string> { { "", "" } } });
 
-        //Act Assert
-        Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(_query, _cancellationToken));
+        //Act
+        var action = () =>  _handler.Handle(_query, _cancellationToken);
+
+        // Assert
+        action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -63,7 +69,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.AssignableFrom<GetAccountProjectionSummaryResult>());
+        actual.Should().BeAssignableTo<GetAccountProjectionSummaryResult>();
     }
 
     [Test]
@@ -92,11 +98,11 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
-        Assert.That(actual.FundsIn, Is.EqualTo(expectedFundsIn));
-        Assert.That(actual.FundsOut, Is.EqualTo(expectedFundsOut));
-        Assert.That(actual.ProjectionStartDate, Is.EqualTo(DateTime.Today));
-        Assert.That(actual.NumberOfMonths, Is.EqualTo(expectedNumberOfmonths));
+        actual.AccountId.Should().Be(ExpectedAccountId);
+        actual.FundsIn.Should().Be(expectedFundsIn);
+        actual.FundsOut.Should().Be(expectedFundsOut);
+        actual.ProjectionStartDate.Should().Be(DateTime.Today);
+        actual.NumberOfMonths.Should().Be(expectedNumberOfmonths);
     }
 
     [Test]
@@ -109,6 +115,6 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.Null);
+        actual.Should().BeNull();
     }
 }

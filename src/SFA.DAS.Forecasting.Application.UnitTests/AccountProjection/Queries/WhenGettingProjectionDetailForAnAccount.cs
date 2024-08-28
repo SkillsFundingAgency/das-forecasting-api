@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Validation;
@@ -73,7 +74,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.AssignableFrom<GetAccountProjectionDetailQueryResult>());
+        actual.Should().BeAssignableTo<GetAccountProjectionDetailQueryResult>();
     }
 
     [Test]
@@ -107,9 +108,9 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
-        Assert.That(actual.ProjectionStartDate, Is.EqualTo(ExpectedStartDate));
-        Assert.That(actual.NumberOfMonths, Is.EqualTo(expectedNumberOfMonths));
+        actual.AccountId.Should().Be(ExpectedAccountId);
+        actual.ProjectionStartDate.Should().Be(ExpectedStartDate);
+        actual.NumberOfMonths.Should().Be(expectedNumberOfMonths);
     }
 
     [Test]
@@ -122,6 +123,6 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.That(actual, Is.Null);
+        actual.Should().BeNull();
     }
 }
