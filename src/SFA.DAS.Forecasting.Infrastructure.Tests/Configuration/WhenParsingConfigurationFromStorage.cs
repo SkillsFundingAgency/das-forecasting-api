@@ -37,7 +37,7 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "");
 
         //Assert
-        Assert.IsNotNull(actual);
+        Assert.That(actual, Is.Not.Null);
     }
 
     [Test]
@@ -50,9 +50,9 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "");
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.IsNotEmpty(actual);
-        Assert.Contains(new KeyValuePair<string, string>("Configuration:Item1", "Value1"), actual);
+        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual, Is.Not.Empty);
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item1", "Value1")));
     }
 
     [Test]
@@ -65,10 +65,10 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "Section");
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.IsNotEmpty(actual);
-        Assert.Contains(new KeyValuePair<string, string>("Section:Item1", "Value1"), actual);
-        Assert.Contains(new KeyValuePair<string, string>("Section:Item2", "Value2"), actual);
+        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual, Is.Not.Empty);
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item1", "Value1")));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item2", "Value2")));
     }
 
     [Test]
@@ -81,13 +81,13 @@ public class WhenParsingConfigurationFromStorage
         var actual = _storageConfigParser.ParseConfig(configItem, "Section");
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.IsNotEmpty(actual);
-        Assert.AreEqual(5, actual.Count);
-        Assert.Contains(new KeyValuePair<string, string>("Configuration:Item1", "Value1"), actual);
-        Assert.Contains(new KeyValuePair<string, string>("Configuration:Item2", "Value2"), actual);
-        Assert.Contains(new KeyValuePair<string, string>("Configuration2:Item3", "Value3"), actual);
-        Assert.Contains(new KeyValuePair<string, string>("Section:Item1", "Value1"), actual);
-        Assert.Contains(new KeyValuePair<string, string>("Section:Item2", "Value2"), actual);
+        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual, Is.Not.Empty);
+        Assert.That(actual.Count, Is.EqualTo(5));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item1", "Value1")));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration:Item2", "Value2")));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Configuration2:Item3", "Value3")));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item1", "Value1")));
+        Assert.That(actual, Does.Contain(new KeyValuePair<string, string>("Section:Item2", "Value2")));
     }
 }

@@ -62,7 +62,7 @@ public class WhenGettingProjectionSummaryForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.IsNotNull(actual);
+        Assert.That(actual, Is.Not.Null);
     }
 
     [TestCase(0)]
@@ -79,7 +79,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expectedFundsIn, actual.FundsIn);
+        Assert.That(actual.FundsIn, Is.EqualTo(expectedFundsIn));
     }
 
     [TestCase(0)]
@@ -96,7 +96,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expectedFundsOut, actual.FundsOut);
+        Assert.That(actual.FundsOut, Is.EqualTo(expectedFundsOut));
     }
 
     [Test]
@@ -111,6 +111,6 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(11, _expectedGenerationDate);
 
         //Assert
-        Assert.IsNull(actual);
+        Assert.That(actual, Is.Null);
     }
 }

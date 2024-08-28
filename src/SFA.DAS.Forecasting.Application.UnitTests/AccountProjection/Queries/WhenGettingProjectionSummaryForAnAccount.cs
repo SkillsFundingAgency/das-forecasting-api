@@ -63,7 +63,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsAssignableFrom<GetAccountProjectionSummaryResult>(actual);
+        Assert.That(actual, Is.AssignableFrom<GetAccountProjectionSummaryResult>());
     }
 
     [Test]
@@ -92,11 +92,11 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(expectedFundsIn, actual.FundsIn);
-        Assert.AreEqual(expectedFundsOut, actual.FundsOut);
-        Assert.AreEqual(DateTime.Today, actual.ProjectionStartDate);
-        Assert.AreEqual(expectedNumberOfmonths, actual.NumberOfMonths);
+        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
+        Assert.That(actual.FundsIn, Is.EqualTo(expectedFundsIn));
+        Assert.That(actual.FundsOut, Is.EqualTo(expectedFundsOut));
+        Assert.That(actual.ProjectionStartDate, Is.EqualTo(DateTime.Today));
+        Assert.That(actual.NumberOfMonths, Is.EqualTo(expectedNumberOfmonths));
     }
 
     [Test]
@@ -109,6 +109,6 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsNull(actual);
+        Assert.That(actual, Is.Null);
     }
 }

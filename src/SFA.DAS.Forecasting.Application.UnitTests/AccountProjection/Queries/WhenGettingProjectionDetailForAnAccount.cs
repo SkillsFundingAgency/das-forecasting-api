@@ -53,7 +53,6 @@ public class WhenGettingProjectionDetailForAnAccount
 
         //Assert
         _validator.Verify(x => x.ValidateAsync(_query), Times.Once);
-
     }
 
     [Test]
@@ -74,7 +73,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsAssignableFrom<GetAccountProjectionDetailQueryResult>(actual);
+        Assert.That(actual, Is.AssignableFrom<GetAccountProjectionDetailQueryResult>());
     }
 
     [Test]
@@ -108,9 +107,9 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(ExpectedStartDate, actual.ProjectionStartDate);
-        Assert.AreEqual(expectedNumberOfMonths, actual.NumberOfMonths);
+        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
+        Assert.That(actual.ProjectionStartDate, Is.EqualTo(ExpectedStartDate));
+        Assert.That(actual.NumberOfMonths, Is.EqualTo(expectedNumberOfMonths));
     }
 
     [Test]
@@ -123,6 +122,6 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsNull(actual);
+        Assert.That(actual, Is.Null);
     }
 }

@@ -19,8 +19,8 @@ public class WhenValidatingTheRequestToGetExpiringFundsForAnAccount
         var actual = await _validator.ValidateAsync(new GetAccountExpiringFundsQuery());
 
         //Assert
-        Assert.IsFalse(actual.IsValid());
-        Assert.IsTrue(actual.ValidationDictionary.ContainsValue("AccountId has not been supplied"));
+        Assert.That(actual.IsValid(), Is.False);
+        Assert.That(actual.ValidationDictionary.ContainsValue("AccountId has not been supplied"), Is.True);
     }
 
     [Test]
@@ -30,6 +30,6 @@ public class WhenValidatingTheRequestToGetExpiringFundsForAnAccount
         var actual = await _validator.ValidateAsync(new GetAccountExpiringFundsQuery { AccountId = 99432 });
 
         //Assert
-        Assert.IsTrue(actual.IsValid());
+        Assert.That(actual.IsValid(), Is.True);
     }
 }

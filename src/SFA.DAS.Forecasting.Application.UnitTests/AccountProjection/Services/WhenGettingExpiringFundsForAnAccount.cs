@@ -58,7 +58,7 @@ public class WhenGettingExpiringFundsForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.IsNotNull(actual);
+        Assert.That(actual, Is.Not.Null);
     }
 
     [Test]
@@ -73,7 +73,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(11);
 
         //Assert
-        Assert.IsNull(actual);
+        Assert.That(actual, Is.Null);
     }
 
     [Test]
@@ -83,12 +83,12 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
         //Assert
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(_expectedGenerationDate, actual.ProjectionGenerationDate);
+        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
+        Assert.That(actual.ProjectionGenerationDate, Is.EqualTo(_expectedGenerationDate));
         var expiryAmounts = actual.ExpiryAmounts.LastOrDefault();
-        Assert.IsNotNull(expiryAmounts);
-        Assert.AreEqual(_expectedProjection[0].ExpiredFunds, expiryAmounts.Amount);
-        Assert.AreEqual(new DateTime(_expectedProjection[0].Year, _expectedProjection[0].Month, 23), expiryAmounts.PayrollDate);
+        Assert.That(expiryAmounts, Is.Not.Null);
+        Assert.That(expiryAmounts.Amount, Is.EqualTo(_expectedProjection[0].ExpiredFunds));
+        Assert.That(expiryAmounts.PayrollDate, Is.EqualTo(new DateTime(_expectedProjection[0].Year, _expectedProjection[0].Month, 23)));
     }
 
     [Test]
@@ -98,7 +98,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
         //Assert
-        Assert.AreEqual(2, actual.ExpiryAmounts.Count);
-        Assert.AreEqual(_expectedProjection[2].ExpiredFunds, actual.ExpiryAmounts[0].Amount);
+        Assert.That(actual.ExpiryAmounts.Count, Is.EqualTo(2));
+        Assert.That(actual.ExpiryAmounts[0].Amount, Is.EqualTo(_expectedProjection[2].ExpiredFunds));
     }
 }

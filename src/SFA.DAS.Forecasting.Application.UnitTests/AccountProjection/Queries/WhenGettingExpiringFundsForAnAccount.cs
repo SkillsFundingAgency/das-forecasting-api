@@ -63,7 +63,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsAssignableFrom<GetAccountExpiringFundsResult>(actual);
+        Assert.That(actual, Is.AssignableFrom<GetAccountExpiringFundsResult>());
     }
 
     [Test]
@@ -89,10 +89,10 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsNotNull(actual.ExpiryAmounts);
-        Assert.AreEqual(expectedAmount, actual.ExpiryAmounts[0].Amount);
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(expectedDate, actual.ProjectionGenerationDate);
+        Assert.That(actual.ExpiryAmounts, Is.Not.Null);
+        Assert.That(actual.ExpiryAmounts[0].Amount, Is.EqualTo(expectedAmount));
+        Assert.That(actual.AccountId, Is.EqualTo(ExpectedAccountId));
+        Assert.That(actual.ProjectionGenerationDate, Is.EqualTo(expectedDate));
     }
 
     [Test]
@@ -105,6 +105,6 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsNull(actual);
+        Assert.That(actual, Is.Null);
     }
 }

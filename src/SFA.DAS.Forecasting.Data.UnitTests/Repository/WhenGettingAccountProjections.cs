@@ -49,8 +49,8 @@ public class WhenGettingAccountProjections
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.AreEqual(2, actual.Count);
+        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual.Count, Is.EqualTo(2));
     }
 
     [Test]
@@ -63,7 +63,7 @@ public class WhenGettingAccountProjections
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.IsEmpty(actual);
+        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual, Is.Empty);
     }
 }

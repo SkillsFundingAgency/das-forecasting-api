@@ -33,14 +33,14 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionController.GetAccountExpiredFunds(ExpectedAccountId);
 
         //Assert
-        Assert.IsNotNull(actual);
+        Assert.That(actual, Is.Not.Null);
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.OK, (HttpStatusCode)result.StatusCode);
-        Assert.IsNotNull(result.Value);
+        Assert.That(result?.StatusCode, Is.Not.Null);
+        Assert.That((HttpStatusCode)result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.That(result.Value, Is.Not.Null);
         var actualExpiryAmounts = result.Value as GetAccountExpiringFundsResult;
-        Assert.IsNotNull(actualExpiryAmounts);
-        Assert.AreEqual(_accountExpiryResult.ExpiryAmounts, actualExpiryAmounts.ExpiryAmounts);
+        Assert.That(actualExpiryAmounts, Is.Not.Null);
+        Assert.That(actualExpiryAmounts.ExpiryAmounts, Is.EqualTo(_accountExpiryResult.ExpiryAmounts));
     }
 
     [Test]
@@ -56,8 +56,8 @@ public class WhenGettingExpiringFundsForAnAccount
 
         //Assert
         var result = actual as NotFoundResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.NotFound, (HttpStatusCode)result.StatusCode);
+        Assert.That(result?.StatusCode, Is.Not.Null);
+        Assert.That((HttpStatusCode)result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]
@@ -74,11 +74,11 @@ public class WhenGettingExpiringFundsForAnAccount
 
         //Assert
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.BadRequest, (HttpStatusCode)result.StatusCode);
+        Assert.That(result?.StatusCode, Is.Not.Null);
+        Assert.That((HttpStatusCode)result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         var actualError = result.Value as ArgumentErrorViewModel;
-        Assert.IsNotNull(actualError);
-        Assert.AreEqual($"{expectedValidationMessage} (Parameter '{expectedParam}')", actualError.Message);
-        Assert.AreEqual(expectedParam, actualError.Params);
+        Assert.That(actualError, Is.Not.Null);
+        Assert.That(actualError.Message, Is.EqualTo($"{expectedValidationMessage} (Parameter '{expectedParam}')"));
+        Assert.That(actualError.Params, Is.EqualTo(expectedParam));
     }
 }
