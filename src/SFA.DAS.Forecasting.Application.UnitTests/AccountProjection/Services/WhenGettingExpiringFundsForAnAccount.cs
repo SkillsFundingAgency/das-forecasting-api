@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Services;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services;
@@ -58,7 +59,7 @@ public class WhenGettingExpiringFundsForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.IsNotNull(actual);
+        actual.Should().NotBeNull();
     }
 
     [Test]
@@ -73,7 +74,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(11);
 
         //Assert
-        Assert.IsNull(actual);
+        actual.Should().BeNull();
     }
 
     [Test]
@@ -83,12 +84,13 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
         //Assert
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(_expectedGenerationDate, actual.ProjectionGenerationDate);
+        actual.AccountId.Should().Be(ExpectedAccountId);
+        actual.ProjectionGenerationDate.Should().Be(_expectedGenerationDate);
+        
         var expiryAmounts = actual.ExpiryAmounts.LastOrDefault();
-        Assert.IsNotNull(expiryAmounts);
-        Assert.AreEqual(_expectedProjection[0].ExpiredFunds, expiryAmounts.Amount);
-        Assert.AreEqual(new DateTime(_expectedProjection[0].Year, _expectedProjection[0].Month, 23), expiryAmounts.PayrollDate);
+        expiryAmounts.Should().NotBeNull();
+        expiryAmounts.Amount.Should().Be(_expectedProjection[0].ExpiredFunds);
+        expiryAmounts.PayrollDate.Should().Be(new DateTime(_expectedProjection[0].Year, _expectedProjection[0].Month, 23));
     }
 
     [Test]
@@ -98,7 +100,7 @@ public class WhenGettingExpiringFundsForAnAccount
         var actual = await _accountProjectionService.GetExpiringFunds(ExpectedAccountId);
 
         //Assert
-        Assert.AreEqual(2, actual.ExpiryAmounts.Count);
-        Assert.AreEqual(_expectedProjection[2].ExpiredFunds, actual.ExpiryAmounts[0].Amount);
+        actual.ExpiryAmounts.Count.Should().Be(2);
+        actual.ExpiryAmounts[0].Amount.Should().Be(_expectedProjection[2].ExpiredFunds);
     }
 }

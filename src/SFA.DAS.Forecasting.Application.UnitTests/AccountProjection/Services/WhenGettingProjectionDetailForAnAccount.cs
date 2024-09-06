@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Services;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services;
@@ -26,9 +27,9 @@ public class WhenGettingProjectionDetailForAnAccount
     {
         _expectedProjection = new List<Domain.Entities.AccountProjection>();
 
-        for (int i = -1; i < 14; i++)
+        for (var index = -1; index < 14; index++)
         {
-            var startDate = _expectedGenerationDate.AddMonths(i);
+            var startDate = _expectedGenerationDate.AddMonths(index);
 
             _expectedProjection.Add(
                 new Domain.Entities.AccountProjection
@@ -68,7 +69,7 @@ public class WhenGettingProjectionDetailForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.IsNotNull(actual);
+        actual.Should().NotBeNull();
     }
 
     [TestCase(0)]
@@ -85,7 +86,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expectedFundsIn, actual.Breakdown.Sum(x => x.FundsIn));
+        actual.Breakdown.Sum(x => x.FundsIn).Should().Be(expectedFundsIn);
     }
 
     [TestCase(0)]
@@ -102,7 +103,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.Commitments));
+        actual.Breakdown.Sum(x => x.FundsOut.Commitments).Should().Be(expected);
     }
 
     [TestCase(0)]
@@ -119,7 +120,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.ApprovedPledgeApplications));
+        actual.Breakdown.Sum(x => x.FundsOut.ApprovedPledgeApplications).Should().Be(expected);
     }
 
     [TestCase(0)]
@@ -136,7 +137,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.AcceptedPledgeApplications));
+        actual.Breakdown.Sum(x => x.FundsOut.AcceptedPledgeApplications).Should().Be(expected);
     }
 
     [TestCase(0)]
@@ -153,7 +154,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.PledgeOriginatedCommitments));
+        actual.Breakdown.Sum(x => x.FundsOut.PledgeOriginatedCommitments).Should().Be(expected);
     }
 
     [TestCase(1)]
@@ -169,6 +170,6 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _accountProjectionService.GetProjectionDetail(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expected, actual.Breakdown.Sum(x => x.FundsOut.TransferConnections));
+        actual.Breakdown.Sum(x => x.FundsOut.TransferConnections).Should().Be(expected);
     }
 }

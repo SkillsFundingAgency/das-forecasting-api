@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Validation;
@@ -53,7 +54,6 @@ public class WhenGettingProjectionDetailForAnAccount
 
         //Assert
         _validator.Verify(x => x.ValidateAsync(_query), Times.Once);
-
     }
 
     [Test]
@@ -64,7 +64,8 @@ public class WhenGettingProjectionDetailForAnAccount
             .ReturnsAsync(new ValidationResult { ValidationDictionary = new Dictionary<string, string> { { "", "" } } });
 
         //Act Assert
-        Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(_query, _cancellationToken));
+        var action =  () =>  _handler.Handle(_query, _cancellationToken);
+        action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -74,7 +75,7 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsAssignableFrom<GetAccountProjectionDetailQueryResult>(actual);
+        actual.Should().BeAssignableTo<GetAccountProjectionDetailQueryResult>();
     }
 
     [Test]
@@ -108,9 +109,9 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.AreEqual(ExpectedAccountId, actual.AccountId);
-        Assert.AreEqual(ExpectedStartDate, actual.ProjectionStartDate);
-        Assert.AreEqual(expectedNumberOfMonths, actual.NumberOfMonths);
+        actual.AccountId.Should().Be(ExpectedAccountId);
+        actual.ProjectionStartDate.Should().Be(ExpectedStartDate);
+        actual.NumberOfMonths.Should().Be(expectedNumberOfMonths);
     }
 
     [Test]
@@ -123,6 +124,6 @@ public class WhenGettingProjectionDetailForAnAccount
         var actual = await _handler.Handle(_query, _cancellationToken);
 
         //Assert
-        Assert.IsNull(actual);
+        actual.Should().BeNull();
     }
 }

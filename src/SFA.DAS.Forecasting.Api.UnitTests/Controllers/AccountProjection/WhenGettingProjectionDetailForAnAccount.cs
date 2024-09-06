@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using FluentAssertions;
 using SFA.DAS.Forecasting.Api.Controllers;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
@@ -15,7 +16,7 @@ public class WhenGettingProjectionDetailForAnAccount
 
     private const long ExpectedAccountId = 123234;
     private const int NumberOfMonths = 12;
-    private readonly DateTime ExpectedStartDate = DateTime.Today;
+    private readonly DateTime _expectedStartDate = DateTime.Today;
 
     [SetUp]
     public void Arrange()
@@ -34,17 +35,19 @@ public class WhenGettingProjectionDetailForAnAccount
     public async Task Then_The_Projections_Are_Returned()
     {
         //Act
-        var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate, NumberOfMonths);
+        var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, _expectedStartDate, NumberOfMonths);
 
         //Assert
-        Assert.IsNotNull(actual);
+        actual.Should().NotBeNull();
+        
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.OK, (HttpStatusCode)result.StatusCode);
-        Assert.IsNotNull(result.Value);
+        result?.StatusCode.Should().NotBeNull();
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.OK);
+        result.Value.Should().NotBeNull();
+        
         var actualSummaryResult = result.Value as GetAccountProjectionDetailQueryResult;
-        Assert.IsNotNull(actualSummaryResult);
-        Assert.AreEqual(_queryResult, actualSummaryResult);
+        actualSummaryResult.Should().NotBeNull();
+        actualSummaryResult.Should().Be(_queryResult);
     }
 
     [Test]
@@ -56,12 +59,11 @@ public class WhenGettingProjectionDetailForAnAccount
             .ReturnsAsync((GetAccountProjectionDetailQueryResult)null);
 
         //Act
-        var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, ExpectedStartDate, NumberOfMonths);
+        var actual = await _accountProjectionController.GetProjectedFundingDetail(ExpectedAccountId, _expectedStartDate, NumberOfMonths);
 
         //Assert
         var result = actual as NotFoundResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.NotFound, (HttpStatusCode)result.StatusCode);
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -74,15 +76,16 @@ public class WhenGettingProjectionDetailForAnAccount
             .ThrowsAsync(new ArgumentException(expectedValidationMessage, expectedParam));
 
         //Act
-        var actual = await _accountProjectionController.GetProjectedFundingDetail(0, ExpectedStartDate, NumberOfMonths);
+        var actual = await _accountProjectionController.GetProjectedFundingDetail(0, _expectedStartDate, NumberOfMonths);
 
         //Assert
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.BadRequest, (HttpStatusCode)result.StatusCode);
+        result?.StatusCode.Should().NotBeNull();
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.BadRequest);
+        
         var actualError = result.Value as ArgumentErrorViewModel;
-        Assert.IsNotNull(actualError);
-        Assert.AreEqual($"{expectedValidationMessage} (Parameter '{expectedParam}')", actualError.Message);
-        Assert.AreEqual(expectedParam, actualError.Params);
+        actualError.Should().NotBeNull();
+        actualError.Message.Should().Be($"{expectedValidationMessage} (Parameter '{expectedParam}')");
+        actualError.Params.Should().Be(expectedParam);
     }
 }

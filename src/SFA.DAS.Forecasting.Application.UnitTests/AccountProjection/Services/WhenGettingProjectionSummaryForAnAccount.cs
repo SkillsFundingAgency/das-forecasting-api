@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Services;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Services;
@@ -23,9 +24,9 @@ public class WhenGettingProjectionSummaryForAnAccount
     {
         _expectedProjection = new List<Domain.Entities.AccountProjection>();
 
-        for (int i = -1; i < 14; i++)
+        for (var index = -1; index < 14; index++)
         {
-            var startDate = _expectedGenerationDate.AddMonths(i);
+            var startDate = _expectedGenerationDate.AddMonths(index);
 
             _expectedProjection.Add(
                 new Domain.Entities.AccountProjection
@@ -62,7 +63,7 @@ public class WhenGettingProjectionSummaryForAnAccount
 
         //Assert
         _accountProjectionRepository.Verify(x => x.GetAccountProjectionByAccountId(ExpectedAccountId));
-        Assert.IsNotNull(actual);
+        actual.Should().NotBeNull();
     }
 
     [TestCase(0)]
@@ -79,7 +80,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expectedFundsIn, actual.FundsIn);
+        actual.FundsIn.Should().Be(expectedFundsIn);
     }
 
     [TestCase(0)]
@@ -96,7 +97,7 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(ExpectedAccountId, _expectedGenerationDate, numberOfMonths);
 
         //Assert
-        Assert.AreEqual(expectedFundsOut, actual.FundsOut);
+        actual.FundsOut.Should().Be(expectedFundsOut);
     }
 
     [Test]
@@ -111,6 +112,6 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionService.GetProjectionSummary(11, _expectedGenerationDate);
 
         //Assert
-        Assert.IsNull(actual);
+        actual.Should().BeNull();
     }
 }

@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.AccountProjection.Queries;
 
@@ -19,8 +20,8 @@ public class WhenValidatingTheRequestToGetProjectionSummaryForAnAccount
         var actual = await _validator.ValidateAsync(new GetAccountProjectionSummaryQuery());
 
         //Assert
-        Assert.IsFalse(actual.IsValid());
-        Assert.IsTrue(actual.ValidationDictionary.ContainsValue("AccountId has not been supplied"));
+        actual.IsValid().Should().BeFalse();
+        actual.ValidationDictionary.ContainsValue("AccountId has not been supplied").Should().BeTrue();
     }
 
     [Test]
@@ -30,6 +31,6 @@ public class WhenValidatingTheRequestToGetProjectionSummaryForAnAccount
         var actual = await _validator.ValidateAsync(new GetAccountProjectionSummaryQuery { AccountId = 99432 });
 
         //Assert
-        Assert.IsTrue(actual.IsValid());
+        actual.IsValid().Should().BeTrue();
     }
 }

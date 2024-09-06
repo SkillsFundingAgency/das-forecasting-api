@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using SFA.DAS.Forecasting.Api.Extensions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Data.Extensions;
@@ -14,34 +18,30 @@ using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Domain.Configuration;
 using SFA.DAS.Forecasting.Domain.Validation;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
-using System.IO;
 
 namespace SFA.DAS.Forecasting.Api;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+
     public Startup(IConfiguration configuration)
     {
-        var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddEnvironmentVariables()
-            .AddAzureTableStorageConfiguration(
-                configuration["ConfigurationStorageConnectionString"],
-                configuration["AppName"].Split(","),
-                configuration["Environment"],
-                configuration["Version"]
-            ).Build();
-        Configuration = config;
+        _configuration = configuration.BuildDasConfiguration();
     }
-
-    public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOptions();
-        services.Configure<ForecastingConfiguration>(Configuration.GetSection("Forecasting"));
-        services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
+
+        services.AddLogging(builder =>
+        {
+            builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+            builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+        });
+
+        services.Configure<ForecastingConfiguration>(_configuration.GetSection("Forecasting"));
+        services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
 
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
         services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
@@ -51,7 +51,7 @@ public class Startup
         var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>();
         var forecastingConfiguration = serviceProvider.GetService<IOptions<ForecastingConfiguration>>();
 
-        if (!Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+        if (!_configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
         {
             services.AddAuthorization(o =>
             {
@@ -61,14 +61,10 @@ public class Startup
                     policy.RequireRole("Default");
                 });
             });
-            services.AddAuthentication(auth =>
-            {
-                auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(auth =>
+            services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; }).AddJwtBearer(auth =>
             {
                 auth.Authority = $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Value.Tenant}";
-                auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                auth.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidAudiences = azureActiveDirectoryConfiguration.Value.Identifier.Split(",")
                 };
@@ -85,23 +81,21 @@ public class Startup
         services.AddScoped(typeof(IValidator<GetAccountProjectionDetailQuery>),
             typeof(GetAccountProjectionDetailValidator));
 
-
         services.AddTransient<IAccountProjectionService, AccountProjectionService>();
 
         services.AddHealthChecks();
 
         services.AddMvc(o =>
         {
-            if (!Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            if (!_configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 o.Filters.Add(new AuthorizeFilter("default"));
             }
-
-
         });
 
-        services.AddForecastingDataContext(forecastingConfiguration.Value.ConnectionString.ToString(), Configuration["Environment"]);
+        services.AddForecastingDataContext(forecastingConfiguration.Value.ConnectionString, _configuration["Environment"]);
 
+        services.AddApplicationInsightsTelemetry();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

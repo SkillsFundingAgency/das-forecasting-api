@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Data.Repository;
 using SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
@@ -49,8 +50,8 @@ public class WhenGettingAccountProjections
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.AreEqual(2, actual.Count);
+        actual.Should().NotBeNull();
+        actual.Count.Should().Be(2);
     }
 
     [Test]
@@ -63,7 +64,7 @@ public class WhenGettingAccountProjections
         var actual = await _accountProjectionRepository.GetAccountProjectionByAccountId(accountId);
 
         //Assert
-        Assert.IsNotNull(actual);
-        Assert.IsEmpty(actual);
+        actual.Should().NotBeNull();
+        actual.Should().BeEmpty();
     }
 }

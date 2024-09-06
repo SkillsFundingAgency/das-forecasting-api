@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.Api.Controllers;
+﻿using FluentAssertions;
+using SFA.DAS.Forecasting.Api.Controllers;
 using SFA.DAS.Forecasting.Api.Models;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 
@@ -40,15 +41,17 @@ public class WhenGettingProjectionSummaryForAnAccount
         var actual = await _accountProjectionController.GetProjectedFundingSummary(ExpectedAccountId, NumberOfMonths);
 
         //Assert
-        Assert.IsNotNull(actual);
+        actual.Should().NotBeNull();
+
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.OK, (HttpStatusCode)result.StatusCode);
-        Assert.IsNotNull(result.Value);
+        result?.StatusCode.Should().NotBeNull();
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.OK);
+        result.Value.Should().NotBeNull();
+
         var actualSummaryResult = result.Value as GetAccountProjectionSummaryResult;
-        Assert.IsNotNull(actualSummaryResult);
-        Assert.AreEqual(_accountSummaryResult.FundsIn, actualSummaryResult.FundsIn);
-        Assert.AreEqual(_accountSummaryResult.FundsOut, actualSummaryResult.FundsOut);
+        actualSummaryResult.Should().NotBeNull();
+        actualSummaryResult.FundsIn.Should().Be(_accountSummaryResult.FundsIn);
+        actualSummaryResult.FundsOut.Should().Be(_accountSummaryResult.FundsOut);
     }
 
     [Test]
@@ -64,8 +67,7 @@ public class WhenGettingProjectionSummaryForAnAccount
 
         //Assert
         var result = actual as NotFoundResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.NotFound, (HttpStatusCode)result.StatusCode);
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -82,11 +84,11 @@ public class WhenGettingProjectionSummaryForAnAccount
 
         //Assert
         var result = actual as ObjectResult;
-        Assert.IsNotNull(result?.StatusCode);
-        Assert.AreEqual(HttpStatusCode.BadRequest, (HttpStatusCode)result.StatusCode);
+        ((HttpStatusCode)result.StatusCode).Should().Be(HttpStatusCode.BadRequest);
+
         var actualError = result.Value as ArgumentErrorViewModel;
-        Assert.IsNotNull(actualError);
-        Assert.AreEqual($"{expectedValidationMessage} (Parameter '{expectedParam}')", actualError.Message);
-        Assert.AreEqual(expectedParam, actualError.Params);
+        actualError.Should().NotBeNull();
+        actualError.Message.Should().Be($"{expectedValidationMessage} (Parameter '{expectedParam}')");
+        actualError.Params.Should().Be(expectedParam);
     }
 }
