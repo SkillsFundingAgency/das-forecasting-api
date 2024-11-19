@@ -33,15 +33,13 @@ public static class ServiceCollectionExtensions
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
-
     }
 
     private static async Task<string> GenerateTokenAsync()
     {
         const string azureResource = "https://database.windows.net/";
         var azureServiceTokenProvider = new AzureServiceTokenProvider();
-        var accessToken = await azureServiceTokenProvider.GetAccessTokenAsync(azureResource);
-
-        return accessToken;
+        
+        return await azureServiceTokenProvider.GetAccessTokenAsync(azureResource);
     }
 }
