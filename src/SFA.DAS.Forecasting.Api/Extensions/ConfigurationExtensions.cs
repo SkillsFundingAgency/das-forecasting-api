@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Domain.Configuration;
-using SFA.DAS.Forecasting.Infrastructure.Configuration;
 
 namespace SFA.DAS.Forecasting.Api.Extensions;
 
@@ -15,12 +15,13 @@ public static class ConfigurationExtensions
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
-            .AddAzureTableStorageConfiguration(
-                configuration["ConfigurationStorageConnectionString"],
-                configuration["AppName"].Split(","),
-                configuration["Environment"],
-                configuration["Version"]
-            );
+            .AddAzureTableStorage(options =>
+            {
+                options.EnvironmentName = configuration["Environment"];
+                options.ConfigurationKeys = configuration["ConfigNames"]!.Split(',');
+                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                options.PreFixConfigurationKeys = false;
+            });
 
         return config.Build();
     }

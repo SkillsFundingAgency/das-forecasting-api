@@ -46,7 +46,8 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]"
+        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
+        "configNames": "SFA.DAS.Forecasting.Api"
     },
     "resources": [
         {
@@ -90,6 +91,10 @@
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
                                     "value": "[toUpper(parameters('environmentName'))]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNames')]"
                                 }
                             ]
                         }
