@@ -9,14 +9,9 @@ public interface IForecastingDataContext
 
 }
 
-public class ForecastingDataContext : DbContext, IForecastingDataContext
+public class ForecastingDataContext(DbContextOptions options) : DbContext(options), IForecastingDataContext
 {
-
     public DbSet<Domain.Entities.AccountProjection> AccountProjections { get; set; }
-
-    public ForecastingDataContext(DbContextOptions options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

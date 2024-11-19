@@ -8,6 +8,9 @@ namespace SFA.DAS.Forecasting.Data.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    private const string AzureResource = "https://database.windows.net/";
+    private static readonly AzureServiceTokenProvider TokenProvider = new();
+    
     public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string connectionString, string environmentName)
     {
         services.AddDbContext<IForecastingDataContext, ForecastingDataContext>((serviceProvider, options) =>
@@ -22,24 +25,16 @@ public static class ServiceCollectionExtensions
 
             options
                 .UseLazyLoadingProxies()
-                .UseSqlServer(
-                    connection,
-                    o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
+                .UseSqlServer(connection, o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
         });
-        RegisterServices(services);
-        return services;
-    }
 
-    private static void RegisterServices(IServiceCollection services)
-    {
         services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
+
+        return services;
     }
 
     private static async Task<string> GenerateTokenAsync()
     {
-        const string azureResource = "https://database.windows.net/";
-        var azureServiceTokenProvider = new AzureServiceTokenProvider();
-        
-        return await azureServiceTokenProvider.GetAccessTokenAsync(azureResource);
+        return await TokenProvider.GetAccessTokenAsync(AzureResource);
     }
 }

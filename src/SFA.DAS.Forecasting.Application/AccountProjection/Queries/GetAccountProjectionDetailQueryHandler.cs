@@ -4,27 +4,19 @@ using SFA.DAS.Forecasting.Domain.Validation;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 
-public class GetAccountProjectionDetailQueryHandler : IRequestHandler<GetAccountProjectionDetailQuery, GetAccountProjectionDetailQueryResult>
+public class GetAccountProjectionDetailQueryHandler(IValidator<GetAccountProjectionDetailQuery> validator, IAccountProjectionService service)
+    : IRequestHandler<GetAccountProjectionDetailQuery, GetAccountProjectionDetailQueryResult>
 {
-    private readonly IValidator<GetAccountProjectionDetailQuery> _validator;
-    private readonly IAccountProjectionService _service;
-
-    public GetAccountProjectionDetailQueryHandler(IValidator<GetAccountProjectionDetailQuery> validator, IAccountProjectionService service)
-    {
-        _validator = validator;
-        _service = service;
-    }
-
     public async Task<GetAccountProjectionDetailQueryResult> Handle(GetAccountProjectionDetailQuery request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request);
+        var validationResult = await validator.ValidateAsync(request);
 
         if (!validationResult.IsValid())
         {
             throw new ArgumentException("The following parameters have failed validation", validationResult.ValidationDictionary.Select(c => c.Key).Aggregate((item1, item2) => item1 + ", " + item2));
         }
 
-        var projectionSummary = await _service.GetProjectionDetail(request.AccountId, request.StartDate, request.NumberOfMonths);
+        var projectionSummary = await service.GetProjectionDetail(request.AccountId, request.StartDate, request.NumberOfMonths);
 
         if (projectionSummary == null)
         {
@@ -50,7 +42,6 @@ public class GetAccountProjectionDetailQueryHandler : IRequestHandler<GetAccount
                     TransferConnections = x.FundsOut.TransferConnections
                 }
             }).ToList()
-
         };
     }
 }

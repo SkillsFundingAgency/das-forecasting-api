@@ -6,15 +6,8 @@ using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 namespace SFA.DAS.Forecasting.Api.Controllers;
 
 [Route("api/accounts/{accountId}/[controller]/")]
-public class AccountProjectionController : ControllerBase
+public class AccountProjectionController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AccountProjectionController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
@@ -23,7 +16,7 @@ public class AccountProjectionController : ControllerBase
     {
         try
         {
-            var response = await _mediator.Send(new GetAccountExpiringFundsQuery { AccountId = accountId });
+            var response = await mediator.Send(new GetAccountExpiringFundsQuery { AccountId = accountId });
 
             if (response == null)
             {
@@ -51,7 +44,7 @@ public class AccountProjectionController : ControllerBase
     {
         try
         {
-            var response = await _mediator.Send(new GetAccountProjectionSummaryQuery { AccountId = accountId, NumberOfMonths = numberOfMonths });
+            var response = await mediator.Send(new GetAccountProjectionSummaryQuery { AccountId = accountId, NumberOfMonths = numberOfMonths });
 
             if (response == null)
             {
@@ -83,7 +76,7 @@ public class AccountProjectionController : ControllerBase
                 NumberOfMonths = numberOfMonths
             };
 
-            var response = await _mediator.Send(query);
+            var response = await mediator.Send(query);
 
             if (response == null)
             {

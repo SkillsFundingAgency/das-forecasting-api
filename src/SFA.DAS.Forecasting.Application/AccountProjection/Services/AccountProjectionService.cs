@@ -2,18 +2,11 @@
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Services;
 
-public class AccountProjectionService : IAccountProjectionService
+public class AccountProjectionService(IAccountProjectionRepository repository) : IAccountProjectionService
 {
-    private readonly IAccountProjectionRepository _repository;
-
-    public AccountProjectionService(IAccountProjectionRepository repository)
-    {
-        _repository = repository;
-    }
-
     public async Task<AccountProjectionExpiry> GetExpiringFunds(long expectedAccountId)
     {
-        var projections = await _repository.GetAccountProjectionByAccountId(expectedAccountId);
+        var projections = await repository.GetAccountProjectionByAccountId(expectedAccountId);
 
         var projectionForDate = projections.FirstOrDefault();
         if (projectionForDate == null)
@@ -32,7 +25,7 @@ public class AccountProjectionService : IAccountProjectionService
 
     public async Task<AccountProjectionSummary> GetProjectionSummary(long accountId, DateTime startDate, int numberOfMonths = 12)
     {
-        var projections = await _repository.GetAccountProjectionByAccountId(accountId);
+        var projections = await repository.GetAccountProjectionByAccountId(accountId);
 
         var projectionForDate = projections.FirstOrDefault();
         if (projectionForDate == null)
@@ -41,25 +34,28 @@ public class AccountProjectionService : IAccountProjectionService
         }
 
         var modifiedProjections = projections.Select(x =>
-        {
-            var commitedTrainingCost = x.LevyFundedCostOfTraining + x.LevyFundedCompletionPayments;
-            var transferOutTotal = x.TransferInCostOfTraining > 0
-                ? (x.TransferOutCostOfTraining - x.TransferInCostOfTraining) + (x.TransferOutCompletionPayments - x.TransferInCompletionPayments)
-                : x.TransferOutCostOfTraining + x.TransferOutCompletionPayments;
-            return new
             {
-                Date = new DateTime(x.Year, x.Month, 1),
-                FundsIn = x.LevyFundsIn,
-                FundsOut = commitedTrainingCost + transferOutTotal
-            };
-        }).ToList().Where(x => x.Date >= startDate).OrderBy(x => x.Date).Take(numberOfMonths);
+                var commitedTrainingCost = x.LevyFundedCostOfTraining + x.LevyFundedCompletionPayments;
+                var transferOutTotal = x.TransferInCostOfTraining > 0
+                    ? x.TransferOutCostOfTraining - x.TransferInCostOfTraining + (x.TransferOutCompletionPayments - x.TransferInCompletionPayments)
+                    : x.TransferOutCostOfTraining + x.TransferOutCompletionPayments;
+                return new
+                {
+                    Date = new DateTime(x.Year, x.Month, 1),
+                    FundsIn = x.LevyFundsIn,
+                    FundsOut = commitedTrainingCost + transferOutTotal
+                };
+            }).ToList()
+            .Where(x => x.Date >= startDate)
+            .OrderBy(x => x.Date)
+            .Take(numberOfMonths);
 
         return new AccountProjectionSummary(accountId, startDate, numberOfMonths, modifiedProjections.Sum(x => x.FundsIn), modifiedProjections.Sum(x => x.FundsOut));
     }
 
     public async Task<AccountProjectionDetail> GetProjectionDetail(long accountId, DateTime startDate, int numberOfMonths)
     {
-        var projections = await _repository.GetAccountProjectionByAccountId(accountId);
+        var projections = await repository.GetAccountProjectionByAccountId(accountId);
 
         var projectionForDate = projections.FirstOrDefault();
         if (projectionForDate == null)
@@ -69,11 +65,12 @@ public class AccountProjectionService : IAccountProjectionService
                 AccountId = accountId,
                 ProjectionStartDate = startDate,
                 NumberOfMonths = numberOfMonths,
-                Breakdown = new List<AccountProjectionDetail.ProjectionMonth>()
+                Breakdown = []
             };
         }
 
-        var modifiedProjections = projections.Where(x => x.Date >= startDate)
+        var modifiedProjections = projections
+            .Where(x => x.Date >= startDate)
             .OrderBy(x => x.Date)
             .Take(numberOfMonths);
 
