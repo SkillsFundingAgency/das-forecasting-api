@@ -27,19 +27,13 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddOptions();
-
         services.AddLogging(builder =>
         {
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
             builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
         });
 
-        services.Configure<ForecastingConfiguration>(_configuration.GetSection("Forecasting"));
-        services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
-
-        services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
-        services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+        services.AddConfigurationOptions(_configuration);
 
         services.AddApiAuthorization(_configuration);
 
