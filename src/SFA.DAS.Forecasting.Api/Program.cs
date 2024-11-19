@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using NLog.Web;
 
 namespace SFA.DAS.Forecasting.Api;
 
@@ -13,6 +12,5 @@ public class Program
 
     private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .UseNLog();
+            .UseStartup<Startup>();
 }
