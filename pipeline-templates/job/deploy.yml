@@ -29,15 +29,7 @@ jobs:
             ParametersPath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/azure/template.parameters.json
             IsMultiRepoCheckout: true
             TemplateSecrets:
-              ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)
-        - template: azure-pipelines-templates/deploy/step/get-apim-subscription-key.yml@das-platform-building-blocks
-          parameters:
-            ServiceConnection: ${{ parameters.ServiceConnection }}
-            ApimResourceGroup: $(SharedApimResourceGroup)
-            ApimName: $(SharedApimName)
-            SubscriptionId: $(EmployerAppServiceName) 
-            PipelineVariableName: ReservationsApimSubscriptionKey
-            IsMultiRepoCheckout: true      
+              ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)   
         - template: azure-pipelines-templates/deploy/step/generate-config.yml@das-platform-building-blocks
           parameters:
             EnvironmentName: $(EnvironmentName)
@@ -50,21 +42,9 @@ jobs:
             ConfigurationSecrets: 
               ReservationsApimSubscriptionKey: $(ReservationsApimSubscriptionKey)
               ReservationsRedisCacheConnectionString: $(DefaultSessionRedisConnectionString)
-              IdentityClientSecret: $(IdentityClientSecret)
-        - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
-          parameters:
-            ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
-            ResourceName: $(EmployerAppServiceName)
-            Tenant: $(Tenant)
-            IsMultiRepoCheckout: true     
-        - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
-          parameters:
-            ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
-            ResourceName: $(ProviderAppServiceName)
-            Tenant: $(Tenant)
-            IsMultiRepoCheckout: true        
+              IdentityClientSecret: $(IdentityClientSecret)        
         - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
-            AppServiceName: $(EmployerAppServiceName)
+            AppServiceName: $(apiAppServiceName)
             DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}.Api/${{ parameters.SolutionBaseName }}.Api.zip
