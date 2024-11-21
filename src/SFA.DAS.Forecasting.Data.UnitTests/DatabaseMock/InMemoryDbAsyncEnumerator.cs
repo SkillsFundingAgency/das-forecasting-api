@@ -1,46 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
 
-namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock
+public class InMemoryDbAsyncEnumerator<T>(IEnumerator<T> enumerator) : IAsyncEnumerator<T>
 {
-    public class InMemoryDbAsyncEnumerator<T> : IAsyncEnumerator<T>
+    private bool _disposed = false;
+
+    public void Dispose()
     {
-        private readonly IEnumerator<T> innerEnumerator;
-        private bool disposed = false;
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        public InMemoryDbAsyncEnumerator(IEnumerator<T> enumerator)
+    public Task<bool> MoveNext(CancellationToken cancellationToken)
+    {
+        return Task.FromResult(enumerator.MoveNext());
+    }
+
+    public T Current => enumerator.Current;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
         {
-            this.innerEnumerator = enumerator;
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public Task<bool> MoveNext(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(this.innerEnumerator.MoveNext());
-        }
-
-        public T Current => this.innerEnumerator.Current;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    // Dispose managed resources.
-                    this.innerEnumerator.Dispose();
-                }
-
-                this.disposed = true;
+                // Dispose managed resources.
+                enumerator.Dispose();
             }
+
+            _disposed = true;
+        }
+    }
+    public async ValueTask<bool> MoveNextAsync()
+    {
+        return await Task.FromResult(enumerator.MoveNext());
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        if (!_disposed)
+        {
+            // Dispose managed resources.
+            enumerator.Dispose();
+            _disposed = true;
         }
 
+        return default;
     }
 }

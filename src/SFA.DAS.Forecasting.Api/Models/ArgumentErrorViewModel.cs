@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.Forecasting.Api.Models
+﻿namespace SFA.DAS.Forecasting.Api.Models;
+
+public class ArgumentErrorViewModel
 {
-    public class ArgumentErrorViewModel
-    {
-        public string Message { get; set; }
-        public string Params { get; set; }
-    }
+    public string Message { get; set; }
+    public string Params { get; set; }
 }
