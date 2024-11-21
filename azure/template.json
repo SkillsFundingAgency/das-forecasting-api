@@ -35,7 +35,7 @@
         "sharedKeyVaultName": {
             "type": "string"
         },
-        "customHostName": {
+        "apiCustomHostName": {
             "type": "string"
         },
         "keyVaultCertificateName": {
@@ -188,7 +188,7 @@
                         }
                     },
                     "customHostName": {
-                        "value": "[parameters('customHostname')]"
+                        "value": "[parameters('apiCustomHostName')]"
                     },
                     "certificateThumbprint": {
                         "value": "[reference(concat(variables('appServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
