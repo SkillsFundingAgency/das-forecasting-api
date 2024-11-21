@@ -38,7 +38,7 @@
         "apiCustomHostName": {
             "type": "string"
         },
-        "keyVaultCertificateName": {
+        "apiAppServiceCertificateName": {
             "type": "string"
         },
         "sharedBackEndAppServicePlanName": {
@@ -91,7 +91,7 @@
                 },
                 "parameters": {
                     "keyVaultCertificateName": {
-                        "value": "[parameters('keyVaultCertificateName')]"
+                        "value": "[parameters('apiAppServiceCertificateName')]"
                     },
                     "keyVaultName": {
                         "value": "[parameters('sharedKeyVaultName')]"
