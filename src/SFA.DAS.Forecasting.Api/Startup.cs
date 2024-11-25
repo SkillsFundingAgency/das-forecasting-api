@@ -34,9 +34,6 @@ public class Startup
 
         services.AddConfigurationOptions(_configuration);
         
-        var provider = services.BuildServiceProvider();
-        var forecastingApiConfiguration = provider.GetService<ForecastingConfiguration>();
-
         services.AddApiAuthorization(_configuration);
 
         services.AddValidators();
