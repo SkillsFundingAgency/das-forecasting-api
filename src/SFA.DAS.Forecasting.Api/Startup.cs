@@ -57,7 +57,7 @@ public class Startup
             .GetSection("Forecasting")
             .Get<ForecastingConfiguration>();
 
-        services.AddForecastingDataContext(forecastingConfiguration.ConnectionString, _configuration["Environment"]);
+        services.AddForecastingDataContext(forecastingConfiguration.ConnectionString, _configuration["EnvironmentName"]);
 
         services.AddOpenTelemetryRegistration(_configuration);
     }
