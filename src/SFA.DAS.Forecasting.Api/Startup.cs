@@ -53,7 +53,7 @@ public class Startup
         
         services.AddForecastingDataContext(_configuration["EnvironmentName"]);
 
-        services.AddOpenTelemetryRegistration(_configuration);
+        services.AddApplicationInsightsTelemetry();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
