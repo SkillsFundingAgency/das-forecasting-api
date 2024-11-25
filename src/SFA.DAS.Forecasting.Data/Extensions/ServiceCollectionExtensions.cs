@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Data.Repository;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Configuration;
 
 namespace SFA.DAS.Forecasting.Data.Extensions;
 
@@ -11,12 +12,13 @@ public static class ServiceCollectionExtensions
     private const string AzureResource = "https://database.windows.net/";
     private static readonly AzureServiceTokenProvider TokenProvider = new();
     
-    public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string connectionString, string environmentName)
+    public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string environmentName)
     {
         services.AddDbContext<IForecastingDataContext, ForecastingDataContext>((serviceProvider, options) =>
         {
-            var connection = new SqlConnection(connectionString);
-
+            var config = serviceProvider.GetService<ForecastingConfiguration>();
+            var connection = new SqlConnection(config.ConnectionString);
+            
             if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 var generateTokenTask = GenerateTokenAsync();

@@ -52,27 +52,8 @@ public class Startup
                 o.Filters.Add(new AuthorizeFilter("default"));
             }
         });
-
-        var forecastingConfiguration = _configuration
-            .GetSection("Forecasting")
-            .Get<ForecastingConfiguration>();
-
-        if (forecastingConfiguration == null)
-        {
-            throw new Exception("Forecasting configuration is missing");
-        }
-
-        if (forecastingConfiguration.ConnectionString == null)
-        {
-            throw new Exception("ConnectionString is missing");
-        }
-
-        if (_configuration["EnvironmentName"] is null)
-        {
-            throw new Exception("EnvironmentName is missing");
-        }
-
-        services.AddForecastingDataContext(forecastingConfiguration.ConnectionString, _configuration["EnvironmentName"]);
+        
+        services.AddForecastingDataContext(_configuration["EnvironmentName"]);
 
         services.AddOpenTelemetryRegistration(_configuration);
     }
