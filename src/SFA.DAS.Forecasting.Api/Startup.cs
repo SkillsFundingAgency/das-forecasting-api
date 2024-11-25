@@ -6,13 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using Microsoft.Extensions.Options;
 using SFA.DAS.Forecasting.Api.Extensions;
 using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Data.Extensions;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
-using SFA.DAS.Forecasting.Domain.Configuration;
 
 namespace SFA.DAS.Forecasting.Api;
 
