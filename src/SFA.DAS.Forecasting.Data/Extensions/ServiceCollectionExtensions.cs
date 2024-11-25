@@ -20,14 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<IForecastingDataContext, ForecastingDataContext>((serviceProvider, options) =>
         {
             var forecastingConfiguration = serviceProvider.GetService<ForecastingConfiguration>();
-
-            if (forecastingConfiguration == null || string.IsNullOrEmpty(forecastingConfiguration.ConnectionString))
-            {
-                var logger = serviceProvider.GetService<ILogger>();
-                var config = serviceProvider.GetService<IConfiguration>();
-                logger.LogError("The connection string is not configured correctly. Config values: {Values}", JsonConvert.SerializeObject(config.GetChildren()));
-            }
-
+            
             var connection = new SqlConnection(forecastingConfiguration.ConnectionString);
 
             if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))

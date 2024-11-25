@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Application.AccountProjection.Queries;
 using SFA.DAS.Forecasting.Application.AccountProjection.Services;
 using SFA.DAS.Forecasting.Data.Extensions;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Configuration;
 
 namespace SFA.DAS.Forecasting.Api;
 
@@ -32,6 +33,9 @@ public class Startup
         });
 
         services.AddConfigurationOptions(_configuration);
+        
+        var provider = services.BuildServiceProvider();
+        var forecastingApiConfiguration = provider.GetService<ForecastingConfiguration>();
 
         services.AddApiAuthorization(_configuration);
 
@@ -45,7 +49,7 @@ public class Startup
 
         services.AddMvc(o =>
         {
-            if (!_configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            if (!_configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 o.Filters.Add(new AuthorizeFilter("default"));
             }

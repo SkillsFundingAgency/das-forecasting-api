@@ -17,7 +17,7 @@ public static class ConfigurationExtensions
             .AddEnvironmentVariables()
             .AddAzureTableStorage(options =>
             {
-                options.EnvironmentName = configuration["Environment"];
+                options.EnvironmentName = configuration["EnvironmentName"];
                 options.ConfigurationKeys = configuration["ConfigNames"]!.Split(',');
                 options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                 options.PreFixConfigurationKeys = false;

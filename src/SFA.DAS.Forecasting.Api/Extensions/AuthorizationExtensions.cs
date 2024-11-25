@@ -12,7 +12,7 @@ public static class AuthorizationExtensions
 {
     public static IServiceCollection AddApiAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
-        if (configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+        if (configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
         {
             return services;
         }
