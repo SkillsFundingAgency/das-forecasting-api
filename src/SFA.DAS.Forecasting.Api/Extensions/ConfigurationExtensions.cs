@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
-using SFA.DAS.Forecasting.Infrastructure.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Forecasting.Domain.Configuration;
 
 namespace SFA.DAS.Forecasting.Api.Extensions;
 
@@ -12,13 +15,27 @@ public static class ConfigurationExtensions
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
-            .AddAzureTableStorageConfiguration(
-                configuration["ConfigurationStorageConnectionString"],
-                configuration["AppName"].Split(","),
-                configuration["Environment"],
-                configuration["Version"]
-            );
+            .AddAzureTableStorage(options =>
+            {
+                options.EnvironmentName = configuration["EnvironmentName"];
+                options.ConfigurationKeys = configuration["ConfigNames"]!.Split(',');
+                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                options.PreFixConfigurationKeys = false;
+            });
 
         return config.Build();
+    }
+
+    public static IServiceCollection AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions();
+        
+        services.Configure<ForecastingConfiguration>(configuration.GetSection("Forecasting"));
+        services.Configure<AzureActiveDirectoryConfiguration>(configuration.GetSection("AzureAd"));
+
+        services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConfiguration>>().Value);
+        services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+        
+        return services;
     }
 }

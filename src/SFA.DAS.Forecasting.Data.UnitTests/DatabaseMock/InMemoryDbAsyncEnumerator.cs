@@ -1,54 +1,49 @@
 ﻿namespace SFA.DAS.Forecasting.Data.UnitTests.DatabaseMock;
 
-public class InMemoryDbAsyncEnumerator<T> : IAsyncEnumerator<T>
+public class InMemoryDbAsyncEnumerator<T>(IEnumerator<T> enumerator) : IAsyncEnumerator<T>
 {
-    private readonly IEnumerator<T> innerEnumerator;
-    private bool disposed = false;
-
-    public InMemoryDbAsyncEnumerator(IEnumerator<T> enumerator)
-    {
-        this.innerEnumerator = enumerator;
-    }
+    private bool _disposed = false;
 
     public void Dispose()
     {
-        this.Dispose(true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
     public Task<bool> MoveNext(CancellationToken cancellationToken)
     {
-        return Task.FromResult(this.innerEnumerator.MoveNext());
+        return Task.FromResult(enumerator.MoveNext());
     }
 
-    public T Current => this.innerEnumerator.Current;
+    public T Current => enumerator.Current;
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!this.disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 // Dispose managed resources.
-                this.innerEnumerator.Dispose();
+                enumerator.Dispose();
             }
 
-            this.disposed = true;
+            _disposed = true;
         }
     }
     public async ValueTask<bool> MoveNextAsync()
     {
-        return await Task.FromResult(this.innerEnumerator.MoveNext());
+        return await Task.FromResult(enumerator.MoveNext());
     }
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        if (!this.disposed)
+        if (!_disposed)
         {
             // Dispose managed resources.
-            this.innerEnumerator.Dispose();
-            this.disposed = true;
+            enumerator.Dispose();
+            _disposed = true;
         }
-    }
 
+        return default;
+    }
 }

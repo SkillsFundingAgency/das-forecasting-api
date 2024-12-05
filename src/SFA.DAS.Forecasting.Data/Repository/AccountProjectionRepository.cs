@@ -3,22 +3,13 @@ using SFA.DAS.Forecasting.Domain.Entities;
 
 namespace SFA.DAS.Forecasting.Data.Repository;
 
-public class AccountProjectionRepository : IAccountProjectionRepository
+public class AccountProjectionRepository(IForecastingDataContext forecastingDataContext) : IAccountProjectionRepository
 {
-    private readonly IForecastingDataContext _forecastingDataContext;
-
-    public AccountProjectionRepository(IForecastingDataContext forecastingDataContext)
-    {
-        _forecastingDataContext = forecastingDataContext;
-    }
-
     public async Task<List<AccountProjection>> GetAccountProjectionByAccountId(long accountId)
     {
-        var projections = await _forecastingDataContext
+        return await forecastingDataContext
             .AccountProjections
             .Where(c => c.AccountId.Equals(accountId))
             .ToListAsync();
-
-        return projections;
     }
 }

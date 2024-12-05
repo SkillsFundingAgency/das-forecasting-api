@@ -1,18 +1,27 @@
 ﻿using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Data.Repository;
 using SFA.DAS.Forecasting.Domain.AccountProjection;
+using SFA.DAS.Forecasting.Domain.Configuration;
 
 namespace SFA.DAS.Forecasting.Data.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string connectionString, string environmentName)
+    private const string AzureResource = "https://database.windows.net/";
+    private static readonly AzureServiceTokenProvider TokenProvider = new();
+
+    public static IServiceCollection AddForecastingDataContext(this IServiceCollection services, string environmentName)
     {
         services.AddDbContext<IForecastingDataContext, ForecastingDataContext>((serviceProvider, options) =>
         {
-            var connection = new SqlConnection(connectionString);
+            var forecastingConfiguration = serviceProvider.GetService<ForecastingConfiguration>();
+            
+            var connection = new SqlConnection(forecastingConfiguration.ConnectionString);
 
             if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -22,26 +31,16 @@ public static class ServiceCollectionExtensions
 
             options
                 .UseLazyLoadingProxies()
-                .UseSqlServer(
-                    connection,
-                    o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
+                .UseSqlServer(connection, o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
         });
-        RegisterServices(services);
-        return services;
-    }
 
-    private static void RegisterServices(IServiceCollection services)
-    {
         services.AddTransient<IAccountProjectionRepository, AccountProjectionRepository>();
 
+        return services;
     }
 
     private static async Task<string> GenerateTokenAsync()
     {
-        const string azureResource = "https://database.windows.net/";
-        var azureServiceTokenProvider = new AzureServiceTokenProvider();
-        var accessToken = await azureServiceTokenProvider.GetAccessTokenAsync(azureResource);
-
-        return accessToken;
+        return await TokenProvider.GetAccessTokenAsync(AzureResource);
     }
 }
